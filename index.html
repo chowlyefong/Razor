@@ -314,15 +314,11 @@ function onButtonClick() {
 		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
 			path = mediaFiles[i].fullPath;
 			document.getElementById('qrResult').src = path;
-			image = document.getElementById('qrResult');
 
-			QCodeDecoder().decodeFromImage(image,
-				function(er,result){
-					if (er)
-						alert('Error: ' + er.message);
-					else
-						alert(result);
-				});
+			document.getElementById('qrResultFld').style.display = 'block';
+			document.getElementById('qrMerchant').innerText = 'Apple Malaysia Sdn Bhd';
+			document.getElementById('qrCurrency').innerText = 'MYR';
+			document.getElementById('qrAmount').innerText = '19319';
 		}
 	};
 
@@ -336,9 +332,18 @@ function onButtonClick() {
 	">
 	</p><p style="text-align:center">
 		<img src="img/qrResult.jpg" id="qrResult" style="width: 250; height: 250" />
+	</p><p id="qrResultFld" style="display:none">
+		<table id="qrTbl" class="travel" style="width:100%"  cellspacing=0 cellpadding=0>
+		<tr>
+			<td width="40%"><b>Merchant:</b></td>
+			<td width="60%" style="text-align:left"><span id="qrMerchant" class="titleGreen"></span></td>
+		</tr><tr>
+			<td><b>Amount To Pay</b></td>
+			<td><span id="qrCurrency" class="titleGreen"></span><span id="qrAmount" class="titleGreen"></span></td>
+		</tr>
+		</table>
+		<a data-role="button" href="#mobileWalletOptions" class="ui-btn ui-corner-all">Proceed To Pay</a>
 	</p>
-	
-	
 	
 	<!-- footer -->
 	<footer data-role="footer" class="ui-body-c" data-position="fixed">
