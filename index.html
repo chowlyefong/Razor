@@ -9,7 +9,6 @@
 <link rel="stylesheet" href="script/jquery.mobile.theme-1.4.5.css" />
 <!-- for QR code reader -->
 <script src="script/qcode-decoder.js"></script>
-
 <!-- for script font type in title -->
 <link rel='stylesheet' href='css/css_family_Pacifico.css'  type='text/css' /> <!-- http://fonts.googleapis.com/css?family=Pacifico -->
 <link rel='stylesheet' href='css/css_family_Jomhuria.css'  type='text/css' /> <!-- http://fonts.googleapis.com/css?family=Jomhuria -->
@@ -106,6 +105,15 @@ function onButtonClick() {
 <!-- for Doughnut chart under My Account -->
 <script src="script/Chart.bundle.js"></script>  <!-- http://www.chartjs.org/dist/2.7.1/Chart.bundle.js -->
 <script src="script/utils.js"></script>  <!-- http://www.chartjs.org/samples/latest/utils.js -->
+<script>
+function calcAmt(){
+	var totalAmt=0;
+	for (x=1; x < 8; x++){
+		totalAmt = totalAmt + parseInt(document.getElementById('amt'+x).value);
+	}
+	document.getElementById('totalAmt').innerText = totalAmt.toString();
+}
+</script>
 </head>
 
 <body onload="initializeMap();">
@@ -332,7 +340,7 @@ function onButtonClick() {
 	<p style="text-align:center">
 		<img src="img/qrResult.jpg" id="qrResult" style="width: 250; height: 250" />
 	</p>
-	<p id="qrResultFld" style="display:none">
+	<p id="qrResultFld" style="display:block">
 		<table id="qrTbl" class="travel" style="width:100%"  cellspacing=0 cellpadding=0>
 		<tr>
 			<td width="40%"><b>Merchant:</b></td>
@@ -523,16 +531,16 @@ function onButtonClick() {
 <!-- Mobile Wallet CASA direct debit -->
 <div data-role="page" id="mobileWalletCASA">
 	<div data-role="header" data-position="fixed" data-theme="a">
-		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> Razor - Mobile Cash MPass</p>
+		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> Razor - Mobile Wallet</p>
 		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-left">
-            <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelCB">Menu</a>
+            <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelCD">Menu</a>
         </div>
 		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
             <a data-icon="gear" data-iconpos="notext" data-role="button" href="#settingPage">Settings</a>
         </div>
 	</div>
 	<!---  Menu ------>
-	<div data-role="panel" id="menuPanelCB" data-display="overlay">
+	<div data-role="panel" id="menuPanelCD" data-display="overlay">
     <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" /> Razor</p> 
     <ul data-role="listview">
 		<li><a href="#myAccount">My Account</a></li>
@@ -546,97 +554,74 @@ function onButtonClick() {
 	</div>
 	<!---- Content --->
     <div role="main" class="ui-content">
-	<p class="pgTitle"><span class="pgTitleRed">LOCATION</span> TO WITHDRAW CASH:</p>
+	<p class="pgTitle"><span class="pgTitleRed">CHOOSE CASA</span> FOR DIRECT DEBIT:</p>
 	<table id="mcashTbl" class="travel" style="width:100%"><tr>
-		<td width="50%">Location Type</td>
-		<td width="50%" style="text-align:left"><select id="mcashType" onchange="
-			window.document.getElementById('branchRow').style.display = 'none';
-			window.document.getElementById('merchantRow').style.display = 'none';
-			window.document.getElementById('fpxRow').style.display = 'none';
-		
-			if (this.selectedIndex == 0) {window.document.getElementById('branchRow').style.display = 'block'; }
-			else if (this.options[this.selectedIndex].value == 'Merchants') {window.document.getElementById('merchantRow').style.display = 'block'; }
-			else if (this.options[this.selectedIndex].value == 'FPX') {window.document.getElementById('fpxRow').style.display = 'block'; }
-			">
-			<option value="OCBC">OCBC Branches</option>
-			<option value="Merchants">OCBC Merchants</option>
-			<option value="FPX">FPX Merchants - Coming Soon!</option>
-			</select>
-		</td>
+		<td width="30%" style="text-align:center">Accounts</td>
+		<td width="33%" style="text-align:center">Available Bal</td>
+		<td width="37%" colspan=2 style="text-align:left">Amount to Withdraw</td>
 	</tr><tr>
-		<td width="50%">OCBC Branch / Outlet</td>
-		<td width="50%" style="text-align:left">
-			<span id="branchRow"><select id="OCBCBr">
-				<option value="OCBC Ampang">OCBC Ampang</option><option value="OCBC Bukit Damansara">OCBC Bukit Damansara</option>
-				<option value="OCBC Cheras">OCBC Cheras</option><option value="OCBC Kepong">OCBC Kepong</option>
-				<option value="OCBC KL Main">OCBC KL Main</option><option value="OCBC Kota Damansara">OCBC Kota Damansara</option>
-				<option value="OCBC Petaling Jaya">OCBC Petaling Jaya</option><option value="OCBC Rawang">OCBC Rawang</option>
-				<option value="OCBC Subang Jaya">OCBC Subang Jaya</option><option value="OCBC Wangsa Maju">OCBC Wangsa Maju</option>
-			</select></span>
-			<span id="merchantRow" style="display:none"><select id="MerchantsNw">
-				<option value="Aeon Maluri Guardian">Aeon Maluri Guardian</option>
-				<option value="Boost Juice KLCC">Boost Juice KLCC</option>
-				<option value="Chakra Palace Hotel">Chakra Palace Hotel</option>
-				<option value="JuiceWorks KLCC">JuiceWorks KLCC</option>
-				<option value="Watson Jalan Pudu">Watson, Jln Pudu</option>
-				<option value="Makro Cash & Carry Little India">Makro Cash & Carry, Little India</option>
-				<option value="Plato Restaurant Bukit Bintang">Plato Restaurant, Bukit Bintang</option>
-			</select></span>
-			<span id="fpxRow"  style="display:none"><select id="FpxNw">
-				<option value="N/A">Sorry, service not available yet</option>
-			</select></span>
-		</td>
+		<td width="30%"><img src="img/ocbc.jpg" /> <br/><span class="titleBlue">7142xxxx35</span></td>
+		<td width="33%" style="text-align:center" class="titleGreen">MYR 9,200</td>
+		<td width="8%" style="text-align:left"><b>MYR</b></td>
+		<td width="29%" class="titleGreen"><input type="text" style="text-align:right" id="amt1" value="9000" onblur="calcAmt()"></td>
+	</tr><tr>
+		<td><img src="img/mbb.jpg" /> <br/><span class="titleBlue">1015xxxxxxx43</span></td>
+		<td style="text-align:center" class="titleGreen">MYR 3,567</td>
+		<td style="text-align:left"><b>MYR</b></td>
+		<td class="titleGreen"><input type="text" style="text-align:right" id="amt2" value="3000" onblur="calcAmt()"></td>
+	</tr><tr>
+		<td><img src="img/hsbc.jpg" /> <br/><span class="titleBlue">6425xxxxxxx11</span></td>
+		<td style="text-align:center" class="titleGreen">MYR 3,214</td>
+		<td style="text-align:left"><b>MYR</b></td>
+		<td class="titleGreen"><input type="text" style="text-align:right" id="amt3" value="3000" onblur="calcAmt()"></td>
+	</tr><tr>
+		<td><img src="img/hlb.jpg" /> <br/><span class="titleBlue">4273xxxxxxx87</span></td>
+		<td style="text-align:center" class="titleGreen">MYR 2,687</td>
+		<td style="text-align:left"><b>MYR</b></td>
+		<td class="titleGreen"><input type="text" style="text-align:right" id="amt4" value="2319" onblur="calcAmt()"></td>
+	</tr><tr>
+		<td><img src="img/pbb.jpg" /> <br/><span class="titleBlue">4273xxxxxxx87</span></td>
+		<td style="text-align:center" class="titleGreen">MYR 2,410</td>
+		<td style="text-align:left"><b>MYR</b></td>
+		<td class="titleGreen"><input type="text" style="text-align:right" id="amt5" value="2000" onblur="calcAmt()"></td>
+	</tr><tr>
+		<td><img src="img/cimb.jpg" /> <br/><span class="titleBlue">6214xxxxxxx74</span></td>
+		<td style="text-align:center" class="titleGreen">MYR 2,010</td>
+		<td style="text-align:left"><b>MYR</b></td>
+		<td class="titleGreen"><input type="text" style="text-align:right" id="amt6" value="0" onblur="calcAmt()"></td>
+	</tr><tr>
+		<td><img src="img/citi.jpg" /> <br/><span class="titleBlue">8432xxxxxxx09</span></td>
+		<td style="text-align:center" class="titleGreen">MYR 1,716</td>
+		<td style="text-align:left"><b>MYR</b></td>
+		<td class="titleGreen"><input type="text" style="text-align:right" id="amt7" value="0" onblur="calcAmt()"></td>
+	</tr><tr>
+		<td colspan=4>&nbsp;</td>
+	</tr><tr>
+		<td colspan=2 style="text-align:right" class="brTitle">TOTAL TO WITHDRAW:</td>
+		<td style="text-align:left"><b>MYR</b></td>
+		<td style="text-align:right"><span id="totalAmt" class="brTitle">19319</span></td>
+	</tr><tr>
+		<td colspan=2 style="text-align:right" class="titleBlue">TOTAL REQUIRED:</td>
+		<td style="text-align:left"><b>MYR</b></td>
+		<td style="text-align:right"><span id="totalReq" class="titleBlue">19319</span></td>
 	</tr>
 	</table>
 	
-	<p class="pgTitle"><span class="pgTitleRed">SET AMOUNT</span> TO WITHDRAW:</p>
-	<table id="mcashTbl2" class="travel" style="width:100%"><tr>
-		<td width="50%">From Account</td>
-		<td width="50%"><select id="mcashAcc">
-			<option value="701-XXXXX547">Current A/C 701-XXXXX547</option>
-			<option value="701-XXXXX132">360 Account 701-XXXXX132</option>
-			</select>
-		</td>
-	</tr><tr>
-		<td >Amount (MYR)</td>
-		<td ><input id="mcashAmount" type="number"></td>
-	</tr>
-	</table> 
 	<a href="#" class="ui-btn ui-corner-all" onclick="
-		if (window.document.getElementById('mcashAmount').value != ''){
-			locType = window.document.getElementById('mcashType').options[window.document.getElementById('mcashType').selectedIndex].value;
-			loc = window.document.getElementById('OCBCBr').options[window.document.getElementById('OCBCBr').selectedIndex].value;
-			
-			if (locType == 'Merchants')
-			{ loc = window.document.getElementById('MerchantsNw').options[window.document.getElementById('MerchantsNw').selectedIndex].value; }
-			else if (locType == 'FPX') 
-			{ loc = window.document.getElementById('FpxNw').options[window.document.getElementById('FpxNw').selectedIndex].value; }
-			
-			window.document.getElementById('mcashLocation').innerText = loc;
-			window.document.getElementById('mcashAmt').innerText = window.document.getElementById('mcashAmount').value;
-			passcode = Math.floor(Math.random() * 1000000);
-			for (z = 1; z < 7; z++){
-				window.document.getElementById('mctq'+z).innerText = passcode.toString().substr(1-z, 1);
-			}
-			passcode = 0;
-			//window.document.getElementById('mcashType').selectedIndex = -1;
-			//window.document.getElementById('OCBCBr').selectedIndex = -1;
-			//window.document.getElementById('MerchantsNw').selectedIndex = -1;
-			//window.document.getElementById('FpxNw').selectedIndex = -1;
-			window.document.getElementById('mcashAmount').value = '';
-			window.document.getElementById('genMPassConfirmationMsg').innerHTML = 'Pass will be valid for only 15 mins.<br/>OK to proceed?';
-			window.document.getElementById('genMPassConfirmation').style.display = 'block';
+		if (window.document.getElementById('totalAmt').innerText != window.document.getElementById('totalReq').innerText){
+			window.document.getElementById('qrCASAMsg').innerHTML = 'Total amount is insufficient for the purchase. Total must be MYR 19,319';
+			window.document.getElementById('qrCASA').style.display = 'block';
 		}else{
-			window.document.getElementById('genMPassConfirmationMsg').innerHTML = 'Please enter amount to proceed';
-			window.document.getElementById('genMPassConfirmation').style.display = 'block';
+			window.document.getElementById('qrCASAMsg').innerHTML = 'Payment successful. Enjoy your shopping!';
+			window.document.getElementById('qrCASA').style.display = 'block';
 			return false;
 		}
-	";>Generate Withdrawal Pass</a>
+	">Make Payment</a>
 	
-	<div id="genMPassConfirmation" class="ui-corner-all" style="display:none;position: absolute; top:300px; left:10px; width:85%; background-color:lightGray; padding:15px; text-align:center;font-weight:bold"><span id="genMPassConfirmationMsg">Pass will be valid for only 15 mins.<br/>OK to proceed?</span>
-		<a data-role="button" href="#mcashPin" class="ui-btn ui-corner-all" onclick="
-			window.document.getElementById('genMPassConfirmation').style.display = 'none';
-			if (window.document.getElementById('genMPassConfirmationMsg').innerHTML == 'Please enter amount to proceed')
+	<div id="qrCASA" class="ui-corner-all" style="display:none;position: absolute; top:300px; left:10px; width:85%; background-color:lightGray; padding:15px; text-align:center;font-weight:bold"><span id="qrCASAMsg">Payment successful. Enjoy your shopping!</span>
+		<a data-role="button" href="#mobileWallet" class="ui-btn ui-corner-all" onclick="
+			window.document.getElementById('qrCASA').style.display = 'none';
+			if (window.document.getElementById('qrCASAMsg').innerHTML == 'Total amount is insufficient for the purchase. Total must be MYR 19,319')
 				return false;
 		">OK</a>
 	</div>
@@ -655,31 +640,25 @@ function onButtonClick() {
 </div>
 <!-- /page -->
 
-<!-- Mobile Cash OCBC MPass page -->
-<div data-role="page" id="mobileCashOCBC">
+<!-- Mobile Wallet IPP -->
+<div data-role="page" id="mobileWalletIPP">
 	<div data-role="header" data-position="fixed" data-theme="a">
-		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> OneLife - Mobile Cash MPass</p>
+		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> Razor - Mobile Wallet</p>
 		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-left">
-            <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelCB">Menu</a>
+            <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelIP">Menu</a>
         </div>
 		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
             <a data-icon="gear" data-iconpos="notext" data-role="button" href="#settingPage">Settings</a>
         </div>
 	</div>
 	<!---  Menu ------>
-	<div data-role="panel" id="menuPanelCB" data-display="overlay">
-    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" /> OneLife</p> 
+	<div data-role="panel" id="menuPanelIP" data-display="overlay">
+    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" /> Razor</p> 
     <ul data-role="listview">
 		<li><a href="#myAccount">My Account</a></li>
-		<li><a href="#mobileCash">Mobile Cash</a></li>
-		<li><a href="#nearestBr" onclick="
-			window.document.getElementById('klmQueue').innerText = noCustKLM.toString();
-			window.document.getElementById('ampQueue').innerText = noCustAMP.toString();">Nearest Branch</a></li>
-		<li><a href="#setupAppointment">Setup Appointment</a></li>
-		<li><a href="#myGoals">My Goals</a></li>
-		<li><a href="#scheduleExpenses">Schedule Expenses</a></li>
-		<li><a href="#manageCard">Manage My Card</a></li>
-		<li><a href="#setupTravel">I am Traveling!</a></li>
+		<li><a href="#mobileWallet">Mobile Wallet</a></li>
+		<li><a href="#fundTransfer">Instant Transfer</a></li>
+		<li><a href="#myApplication">My Applications</a></li>
 		<li><a data-icon="arrow-r" data-role="button" href="#loginPage">Logout</a></li>
 		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/conditions-of-access.html">Terms of Usage</a></li>
 		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/security-privacy.html">Privacy Policy</a></li>
@@ -687,7 +666,121 @@ function onButtonClick() {
 	</div>
 	<!---- Content --->
     <div role="main" class="ui-content">
-	<!--<a href="#" class="ui-btn ui-corner-all blue">Mobile Cash</a> -->
+	<p class="pgTitle"><span class="pgTitleRed">EASY PAYMENT</span> INSTALLMENT PLAN:</p>
+	<table id="ippTbl" class="travel" style="width:100%"><tr>
+		<td width="50%">Amount Required</td>
+		<td width="50%" style="text-align:left"><b>MYR 19,319</b></td>
+	</tr><tr>
+		<td width="50%">Installment Plan</td>
+		<td width="50%" style="text-align:left">
+			<select id="ippPlan" onClick="
+				if (document.getElementById('ippPlan').selectedIndex == 0){
+					document.getElementById('ippMthAmt').innerHTML = 'MYR 3,542';
+				}else if (document.getElementById('ippPlan').selectedIndex == 1){
+					document.getElementById('ippMthAmt').innerHTML = 'MYR 2,448';
+				}else if (document.getElementById('ippPlan').selectedIndex == 2){
+					document.getElementById('ippMthAmt').innerHTML = 'MYR 1,868';
+				}">
+				<option value="6 months">6 months</option>
+				<option value="9 months">9 months</option>
+				<option value="12 months">12 months</option>
+			</select>
+		</td>
+	</tr><tr>
+		<td>Monthly Installment</td>
+		<td id="ippMthAmt" style="font-weight:bold">MYR 3,542</td>
+	</tr><tr>
+		<td style="vertical-align: top; padding-top: 11pt">Auto Debit Installment?</td>
+		<td><select id="ippAutoDebit" onclick="
+			if (document.getElementById('ippAutoDebit').selectedIndex != 2){
+				document.getElementById('autodebitDate').style.display = 'block';
+				document.getElementById('autodebitDt').value = '2018-06-01';
+			}else{
+				document.getElementById('autodebitDate').style.display = 'none';
+			}">
+			<option value="701-XXXXX547" selected>Current A/C 701xxxxx547</option>
+			<option value="701-XXXXX132">360 Account 701xxxxx132</option>
+			<option value="NA">No, I will pay manually</option>
+			</select>
+			<span id="autodebitDate" style="display:block">
+				<input type="date" id="autodebitDt" value="2018-06-01" />
+			</span>
+		</td>
+	</tr>
+	</table>
+	
+	<p align="left" class="font-small-i-b"><br/><br/><br/>Terms & Conditions:</p>
+	<p align="left" >
+		<ol class="font-small-i-b">
+		<li>The installment plan is a credit facility granted based on review of your financial status</li>
+		<li>Bank reserved the rights to review and readjust the facility based on your repayment history</li>
+		<li>Max 3 times allowable default on repayment, after which penalty of 2% of total outstanding will be imposed. Facility will be terminated and bank will reclaim outstanding amount from any of your available CASA balance</li>
+		<li>For your convenience, you are encourage to setup auto debit for your installment repayment</li>
+		</ol>
+	</p>
+	<a href="#" class="ui-btn ui-corner-all" onclick="
+		if (window.document.getElementById('ippAutoDebit').selectedIndex == 2){
+			window.document.getElementById('qrIPPMsg').innerHTML = 'You have chosen to purchase using Easy Pay Plan without monthly auto-debit setup.<br/><br/>OK to proceed?';
+			window.document.getElementById('qrIPP').style.display = 'block';
+		}else{
+			window.document.getElementById('qrIPPMsg').innerHTML = 'Your purchase with Easy Pay Plan is successful. Enjoy your shopping!';
+			window.document.getElementById('qrIPP').style.display = 'block';
+			return false;
+		}
+	";>Purchase with Easy Pay</a>
+	
+	<div id="qrIPP" class="ui-corner-all" style="display:none;position: absolute; top:300px; left:10px; width:85%; background-color:lightGray; padding:15px; text-align:center;font-weight:bold"><span id="qrIPPMsg">Your purchase with Easy Pay Plan is successful. Enjoy your shopping!</span>
+		<a data-role="button" href="#mobileWallet" class="ui-btn ui-corner-all" onclick="
+			window.document.getElementById('qrIPP').style.display = 'none';
+			if (window.document.getElementById('ippAutoDebit').selectedIndex == 2){
+				window.document.getElementById('qrIPPMsg').innerHTML = 'Your purchase with Easy Pay Plan is successful. Enjoy your shopping!';
+				window.document.getElementById('qrIPP').style.display = 'block';
+				window.document.getElementById('ippAutoDebit').selectedIndex = 0;
+				return false;
+			}
+		">OK</a>
+	</div>
+    </div>
+	
+	<!-- footer -->
+	<footer data-role="footer" class="ui-body-c" data-position="fixed">
+		<div data-role="navbar" >
+		<ul>
+		 <li><a href="#deal" data-icon="star" >Deals</a></li>
+		 <li><a href="#message" data-icon="mail" >My Messages</a></li>
+		 <li><a href="https://www.ocbc.com.my" data-icon="arrow-r" data-rel="external" >Go to Website</a></li>
+		</ul>
+		</div>
+	</footer>
+</div>
+<!-- /page -->
+
+<!-- Mobile Wallet Financing -->
+<div data-role="page" id="mobileWalletFin">
+	<div data-role="header" data-position="fixed" data-theme="a">
+		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> Razor - Mobile Wallet</p>
+		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-left">
+            <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelFI">Menu</a>
+        </div>
+		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
+            <a data-icon="gear" data-iconpos="notext" data-role="button" href="#settingPage">Settings</a>
+        </div>
+	</div>
+	<!---  Menu ------>
+	<div data-role="panel" id="menuPanelFI" data-display="overlay">
+    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" /> Razor</p> 
+    <ul data-role="listview">
+		<li><a href="#myAccount">My Account</a></li>
+		<li><a href="#mobileWallet">Mobile Wallet</a></li>
+		<li><a href="#fundTransfer">Instant Transfer</a></li>
+		<li><a href="#myApplication">My Applications</a></li>
+		<li><a data-icon="arrow-r" data-role="button" href="#loginPage">Logout</a></li>
+		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/conditions-of-access.html">Terms of Usage</a></li>
+		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/security-privacy.html">Privacy Policy</a></li>
+    </ul>
+	</div>
+	<!---- Content --->
+    <div role="main" class="ui-content">
 	<p class="pgTitle"><span class="pgTitleRed">LOCATION</span> TO WITHDRAW CASH:</p>
 	<table id="mcashTbl" class="travel" style="width:100%"><tr>
 		<td width="50%">Location Type</td>
