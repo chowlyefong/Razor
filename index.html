@@ -8,24 +8,8 @@
 <link rel="stylesheet" href="script/jquery.mobile-1.4.5.css" />
 <link rel="stylesheet" href="script/jquery.mobile.theme-1.4.5.css" />
 <!-- for QR code reader -->
-<script src="script/qr_packed.js"></script>  <!-- https://rawgit.com/sitepoint-editors/jsqrcode/master/src/qr_packed.js -->
-<script>
-function openQRCamera(node) {
-  var reader = new FileReader();
-  reader.onload = function() {
-    node.value = "";
-    qrcode.callback = function(res) {
-      if(res instanceof Error) {
-        alert(res.details);  <!-- "No QR code found. Please make sure the QR code is within the camera's frame and try again." -->
-      } else {
-        node.parentNode.previousElementSibling.value = res;
-      }
-    };
-    qrcode.decode(reader.result);
-  };
-  reader.readAsDataURL(node.files[0]);
-}
-</script>
+<script src="script/qcode-decoder.min.js"></script>
+
 <!-- for script font type in title -->
 <link rel='stylesheet' href='css/css_family_Pacifico.css'  type='text/css' /> <!-- http://fonts.googleapis.com/css?family=Pacifico -->
 <link rel='stylesheet' href='css/css_family_Jomhuria.css'  type='text/css' /> <!-- http://fonts.googleapis.com/css?family=Jomhuria -->
@@ -321,18 +305,24 @@ function onButtonClick() {
 	<!---- Content --->
     <div role="main" class="ui-content">
 	<p class="pgTitle"><span class="pgTitleRed">SCAN QR</span> TO PAY</p>
-	<input type="text" id="qrResult"
-	><label for="qr" class="qrcode-text-btn" style="background-image:url(img/QRicon.png)">
-	<input type="file" id="qr" accept="image/*" capture=camera onchange="openQRCamera(this);" tabindex=-1 style="display:none">
-	</label>
+	<!-- for QR Code scanner -->
 	<p>
-	<input type="button" id="camera" value="Camera" onclick="
+	<input type="button" id="camera" value="Capture QR Code" onclick="
 	// capture callback
 	var captureSuccess = function(mediaFiles) {
 		var i, path, len;
 		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
 			path = mediaFiles[i].fullPath;
+			document.getElementById('qrResult').src = path;
 			alert(path);
+
+			QCodeDecoder().decodeFromImage(path,
+				function(er,result){
+					if (er)
+						alert('Error: ' + er.message);
+					else
+						alert(result);
+				});
 		}
 	};
 
@@ -344,8 +334,10 @@ function onButtonClick() {
 	// start image capture
 	navigator.device.capture.captureImage(captureSuccess, captureError, {limit:2});
 	">
+	</p><p style="text-align:center">
+		<img src="img/qrResult.jpg" id="qrResult" />
 	</p>
-	<!-- for QR Code scanner -->
+	
 	
 	
 	<!-- footer -->
