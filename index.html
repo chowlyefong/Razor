@@ -8,10 +8,24 @@
 <link rel="stylesheet" href="script/jquery.mobile-1.4.5.css" />
 <link rel="stylesheet" href="script/jquery.mobile.theme-1.4.5.css" />
 <!-- for QR code reader -->
-<script src="script/WebCodeCamjs.js"></script>
-<script src="script/qrcodelib.js"></script>
-<script src="script/DecoderWorker.js"></script>
-
+<script src="script/qr_packed.js"></script>  <!-- https://rawgit.com/sitepoint-editors/jsqrcode/master/src/qr_packed.js -->
+<script>
+function openQRCamera(node) {
+  var reader = new FileReader();
+  reader.onload = function() {
+    node.value = "";
+    qrcode.callback = function(res) {
+      if(res instanceof Error) {
+        alert(res.details);  <!-- "No QR code found. Please make sure the QR code is within the camera's frame and try again." -->
+      } else {
+        node.parentNode.previousElementSibling.value = res;
+      }
+    };
+    qrcode.decode(reader.result);
+  };
+  reader.readAsDataURL(node.files[0]);
+}
+</script>
 <!-- for script font type in title -->
 <link rel='stylesheet' href='css/css_family_Pacifico.css'  type='text/css' /> <!-- http://fonts.googleapis.com/css?family=Pacifico -->
 <link rel='stylesheet' href='css/css_family_Jomhuria.css'  type='text/css' /> <!-- http://fonts.googleapis.com/css?family=Jomhuria -->
@@ -108,88 +122,6 @@ function onButtonClick() {
 <!-- for Doughnut chart under My Account -->
 <script src="script/Chart.bundle.js"></script>  <!-- http://www.chartjs.org/dist/2.7.1/Chart.bundle.js -->
 <script src="script/utils.js"></script>  <!-- http://www.chartjs.org/samples/latest/utils.js -->
-
-<!-- for QR Code scanner -->
-<script type="text/javascript">
-	var txt = "innerText" in HTMLElement.prototype ? "innerText" : "textContent";
-	var arg = {
-		resultFunction: function(result) {
-			/*
-				result.format: code format,
-				result.code: decoded string,
-				result.imgData: decoded image data
-			*/
-			var aChild = document.createElement('li');
-			aChild[txt] = result.format + ': ' + result.code;
-			document.querySelector('body').appendChild(aChild);
-		}
-	};
-    /* -------------------------------------- Available parameters --------------------------------------*/
-    var options = {
-        DecodeQRCodeRate: 5,                    // null to disable OR int > 0 !
-        DecodeBarCodeRate: 5,                   // null to disable OR int > 0 !
-        successTimeout: 500,                    // delay time when decoding is succeed
-        codeRepetition: true,                   // accept code repetition true or false
-        tryVertical: true,                      // try decoding vertically positioned barcode true or false
-        frameRate: 15,                          // 1 - 25
-        width: 320,                             // canvas width
-        height: 240,                            // canvas height
-        constraints: {                          // default constraints
-            video: {
-                mandatory: {
-                    maxWidth: 1280,
-                    maxHeight: 720
-                },
-                optional: [{
-                    sourceId: true
-                }]
-            },
-            audio: false
-        },
-        flipVertical: false,                    // boolean
-        flipHorizontal: false,                  // boolean
-        zoom: -1,                               // if zoom = -1, auto zoom for optimal resolution else int
-        beep: 'audio/beep.mp3',                 // string, audio file location
-        decoderWorker: 'js/DecoderWorker.js',   // string, DecoderWorker file location
-        brightness: 0,                          // int
-        autoBrightnessValue: false,             // functional when value autoBrightnessValue is int
-        grayScale: false,                       // boolean
-        contrast: 0,                            // int
-        threshold: 0,                           // int 
-        sharpness: [],      // to On declare matrix, example for sharpness ->  [0, -1, 0, -1, 5, -1, 0, -1, 0]
-        resultFunction: function(result) {
-            /*
-                result.format: code format,
-                result.code: decoded string,
-                result.imgData: decoded image data
-            */
-            alert(result.code);
-        },
-        cameraSuccess: function(stream) {           //callback funtion to camera success
-            console.log('cameraSuccess');
-        },
-        canPlayFunction: function() {               //callback funtion to can play
-            console.log('canPlayFunction');
-        },
-        getDevicesError: function(error) {          //callback funtion to get Devices error
-            console.log(error);
-        },
-        getUserMediaError: function(error) {        //callback funtion to get usermedia error
-            console.log(error);
-        },
-        cameraError: function(error) {              //callback funtion to camera error  
-            console.log(error);
-        }
-    };
-
-    /*---------------------------- Example initializations Javascript version ----------------------------*/
-    new WebCodeCamJS("canvas").init(arg);
-    /* OR */
-    var canvas = document.querySelector('#webcodecam-canvas');
-    new WebCodeCamJS(canvas).init();
-    /* OR */
-    new WebCodeCamJS('#webcodecam-canvas').init();
-</script>
 </head>
 
 <body onload="initializeMap();">
@@ -389,10 +321,12 @@ function onButtonClick() {
 	<!---- Content --->
     <div role="main" class="ui-content">
 	<p class="pgTitle"><span class="pgTitleRed">SCAN QR</span> TO PAY</p>
-	Please scan the QR code for payment:
-	<canvas></canvas>
+	<input type="text" id="qrResult"
+	><label for="qr" class="qrcode-text-btn" style="background-image:url(img/QRicon.png)">
+	<input type="file" id="qr" accept="image/*" capture="environment" onchange="openQRCamera(this);" tabindex=-1 style="display:none">
+	</label>
+	<!-- for QR Code scanner -->
 	
-    </div>
 	
 	<!-- footer -->
 	<footer data-role="footer" class="ui-body-c" data-position="fixed">
