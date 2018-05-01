@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="script/jquery.mobile-1.4.5.css" />
 <link rel="stylesheet" href="script/jquery.mobile.theme-1.4.5.css" />
 <!-- for QR code reader -->
-<script src="script/qcode-decoder.min.js"></script>
+<script src="script/qcode-decoder.js"></script>
 
 <!-- for script font type in title -->
 <link rel='stylesheet' href='css/css_family_Pacifico.css'  type='text/css' /> <!-- http://fonts.googleapis.com/css?family=Pacifico -->
@@ -332,7 +332,7 @@ function onButtonClick() {
 	};
 
 	// start image capture
-	navigator.device.capture.captureImage(captureSuccess, captureError, {limit:2});
+	navigator.device.capture.captureImage(captureSuccess, captureError, {limit:1});
 	">
 	</p><p style="text-align:center">
 		<img src="img/qrResult.jpg" id="qrResult" style="width: 250; height: 250" />
