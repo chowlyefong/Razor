@@ -323,8 +323,28 @@ function onButtonClick() {
 	<p class="pgTitle"><span class="pgTitleRed">SCAN QR</span> TO PAY</p>
 	<input type="text" id="qrResult"
 	><label for="qr" class="qrcode-text-btn" style="background-image:url(img/QRicon.png)">
-	<input type="file" id="qr" accept="image/*" capture=camera onchange="openQRCamera(this);" tabindex=-1 >
+	<input type="file" id="qr" accept="image/*" capture=camera onchange="openQRCamera(this);" tabindex=-1 style="display:none">
 	</label>
+	<p>
+	<input type="button" id="camera" value="Camera" onclick="
+	// capture callback
+	var captureSuccess = function(mediaFiles) {
+		var i, path, len;
+		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+			path = mediaFiles[i].fullPath;
+			alert(path);
+		}
+	};
+
+	// capture error callback
+	var captureError = function(error) {
+		navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
+	};
+
+	// start image capture
+	navigator.device.capture.captureImage(captureSuccess, captureError, {limit:2});
+	">
+	</p>
 	<!-- for QR Code scanner -->
 	
 	
