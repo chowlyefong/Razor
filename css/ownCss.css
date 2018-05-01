@@ -105,20 +105,3 @@ body {
 .flipSwitch .ui-slider-switch {
 	width: 12em;
 }
-
-.qrcode-text-btn {
-  display: inline-block;
-  height: 2em;
-  width: 15em;
-  background: no-repeat;
-  cursor: pointer;
-  align:center;
-}
-
-.qrcode-text-btn > input[type=file] {
-  position: absolute;
-  overflow: hidden !important;
-  width: 1px !important;
-  height: 1px !important;
-  opacity: 0 !important;
-}
