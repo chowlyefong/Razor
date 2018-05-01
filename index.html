@@ -314,9 +314,9 @@ function onButtonClick() {
 		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
 			path = mediaFiles[i].fullPath;
 			document.getElementById('qrResult').src = path;
-			alert(path);
+			image = document.getElementById('qrResult');
 
-			QCodeDecoder().decodeFromImage(path,
+			QCodeDecoder().decodeFromImage(image,
 				function(er,result){
 					if (er)
 						alert('Error: ' + er.message);
@@ -335,7 +335,7 @@ function onButtonClick() {
 	navigator.device.capture.captureImage(captureSuccess, captureError, {limit:2});
 	">
 	</p><p style="text-align:center">
-		<img src="img/qrResult.jpg" id="qrResult" />
+		<img src="img/qrResult.jpg" id="qrResult" style="width: 250; height: 250" />
 	</p>
 	
 	
