@@ -188,7 +188,7 @@ function onButtonClick() {
 <!-- MyAccount page -->
 <div data-role="page" id="myAccount">
 	<div data-role="header" data-position="fixed" data-theme="a">
-		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> OneLife - My Account</p>
+		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> Razor - My Account</p>
 		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-left">
             <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelA">Menu</a>
         </div>
@@ -198,10 +198,10 @@ function onButtonClick() {
 	</div>
 	<!---  Menu ------>
 	<div data-role="panel" id="menuPanelA" data-display="overlay">
-    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" />  OneLife</p> 
+    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" />  Razor</p> 
     <ul data-role="listview">
 		<li><a href="#myAccount">My Account</a></li>
-		<li><a href="#mobileWallet" onclick="new WebCodeCamJS('canvas').init(arg);">Mobile Wallet</a></li>
+		<li><a href="#mobileWallet">Mobile Wallet</a></li>
 		<li><a href="#fundTransfer">Instant Transfer</a></li>
 		<li><a href="#myApplication">My Applications</a></li>
 		<li><a data-icon="arrow-r" data-role="button" href="#loginPage">Logout</a></li>
@@ -306,7 +306,6 @@ function onButtonClick() {
     <div role="main" class="ui-content">
 	<p class="pgTitle"><span class="pgTitleRed">SCAN QR</span> TO PAY</p>
 	<!-- for QR Code scanner -->
-	<p>
 	<input type="button" id="camera" value="Capture QR Code" onclick="
 	// capture callback
 	var captureSuccess = function(mediaFiles) {
@@ -330,20 +329,22 @@ function onButtonClick() {
 	// start image capture
 	navigator.device.capture.captureImage(captureSuccess, captureError, {limit:1});
 	">
-	</p><p style="text-align:center">
+	<p style="text-align:center">
 		<img src="img/qrResult.jpg" id="qrResult" style="width: 250; height: 250" />
-	</p><p id="qrResultFld" style="display:none">
+	</p>
+	<p id="qrResultFld" style="display:none">
 		<table id="qrTbl" class="travel" style="width:100%"  cellspacing=0 cellpadding=0>
 		<tr>
 			<td width="40%"><b>Merchant:</b></td>
 			<td width="60%" style="text-align:left"><span id="qrMerchant" class="titleGreen"></span></td>
 		</tr><tr>
-			<td><b>Amount To Pay</b></td>
-			<td><span id="qrCurrency" class="titleGreen"></span><span id="qrAmount" class="titleGreen"></span></td>
+			<td><b>Amount To Pay:</b></td>
+			<td><span id="qrCurrency" class="titleGreen"></span>&nbsp;&nbsp;<span id="qrAmount" class="titleGreen"></span></td>
 		</tr>
 		</table>
 		<a data-role="button" href="#mobileWalletOptions" class="ui-btn ui-corner-all">Proceed To Pay</a>
 	</p>
+	</div>
 	
 	<!-- footer -->
 	<footer data-role="footer" class="ui-body-c" data-position="fixed">
@@ -414,16 +415,18 @@ function onButtonClick() {
 	
 	<p align="left" class="font-small-i-b"><br/><br/><br/>Terms & Conditions:</p>
 	<p align="left" >
-		<ol class="font-small-i-b"><li>When forex is involved, Telegraphic Transfer (TT) rates will be used</li>
+		<ol class="font-small-i-b">
+		<li>When forex is involved, Telegraphic Transfer (TT) rates will be used</li>
 		<li>Transfer will be instant with account balance reflected immediately</li>
 		<li>No capped limit on amount allowable for transfer</li>
-		<li>Net service charge per transfer is as below:</li><br/>
-		<ul class="font-small-i-b"><li>For amount < MYR 30,000 equivalent: MYR 0.05 per transfer including GST</li>
-			<li>For amount > MYR 30,000 equivalent: MYR 3.00 per transfer including GST</li>
-		</ul>
+		<li>Net service charge per transfer is as below:</li>
 		</ol>
-		</p>
-		
+		<ul class="font-small-i-b" style="margin-left:10pt">
+			<li>For amount less than MYR 30,000 equivalent: MYR 0.05 per transfer including GST</li>
+			<li>For amount more than MYR 30,000 equivalent: MYR 3.00 per transfer including GST</li>
+		</ul>
+	</p>
+
 	<a data-role="button" href="#" class="ui-btn ui-corner-all" onclick="
 		if (window.document.getElementById('transferAmt').value == '' || window.document.getElementById('recipientMobile').value == ''){
 			window.document.getElementById('saveTransfer').innerText = 'Please fill up all the fields to initiate transfer';
@@ -487,17 +490,17 @@ function onButtonClick() {
 	Please select one of the options:
 	<ul data-role="listview" data-inset="true" id="mobileCashList" class="ui-mini">
 		<li><a href="#mobileWalletCASA">
-			<img src="img/nfc.png">
+			<img src="img/directDebit.jpg">
 		<h2>Pay from CASA</h2>
 		<p class="wrap" style="font-size:8pt">Combine amount from one or more local CASA accounts</p></a>
 		</li>
 		<li><a href="#mobileWalletIPP">
-			<img src="img/mPass.png">
+			<img src="img/epp.jpg">
 		<h2>Easy Payment Plan</h2>
 		<p class="wrap" style="font-size:8pt">Flexible & affordable installments for your purchase up to MYR 50,000</p></a>
 		</li>
 		<li><a href="#mobileWalletFin">
-			<img src="img/mPass.png">
+			<img src="img/loan.jpg">
 		<h2>Instant Financing</h2>
 		<p class="wrap" style="font-size:8pt">Apply financing for your big asset purchase over MYR 50,000</p></a>
 		</li>
@@ -516,6 +519,141 @@ function onButtonClick() {
 		</div>
 	</footer>
 </div>
+
+<!-- Mobile Wallet CASA direct debit -->
+<div data-role="page" id="mobileWalletCASA">
+	<div data-role="header" data-position="fixed" data-theme="a">
+		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> Razor - Mobile Cash MPass</p>
+		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-left">
+            <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelCB">Menu</a>
+        </div>
+		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
+            <a data-icon="gear" data-iconpos="notext" data-role="button" href="#settingPage">Settings</a>
+        </div>
+	</div>
+	<!---  Menu ------>
+	<div data-role="panel" id="menuPanelCB" data-display="overlay">
+    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" /> Razor</p> 
+    <ul data-role="listview">
+		<li><a href="#myAccount">My Account</a></li>
+		<li><a href="#mobileWallet">Mobile Wallet</a></li>
+		<li><a href="#fundTransfer">Instant Transfer</a></li>
+		<li><a href="#myApplication">My Applications</a></li>
+		<li><a data-icon="arrow-r" data-role="button" href="#loginPage">Logout</a></li>
+		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/conditions-of-access.html">Terms of Usage</a></li>
+		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/security-privacy.html">Privacy Policy</a></li>
+    </ul>
+	</div>
+	<!---- Content --->
+    <div role="main" class="ui-content">
+	<p class="pgTitle"><span class="pgTitleRed">LOCATION</span> TO WITHDRAW CASH:</p>
+	<table id="mcashTbl" class="travel" style="width:100%"><tr>
+		<td width="50%">Location Type</td>
+		<td width="50%" style="text-align:left"><select id="mcashType" onchange="
+			window.document.getElementById('branchRow').style.display = 'none';
+			window.document.getElementById('merchantRow').style.display = 'none';
+			window.document.getElementById('fpxRow').style.display = 'none';
+		
+			if (this.selectedIndex == 0) {window.document.getElementById('branchRow').style.display = 'block'; }
+			else if (this.options[this.selectedIndex].value == 'Merchants') {window.document.getElementById('merchantRow').style.display = 'block'; }
+			else if (this.options[this.selectedIndex].value == 'FPX') {window.document.getElementById('fpxRow').style.display = 'block'; }
+			">
+			<option value="OCBC">OCBC Branches</option>
+			<option value="Merchants">OCBC Merchants</option>
+			<option value="FPX">FPX Merchants - Coming Soon!</option>
+			</select>
+		</td>
+	</tr><tr>
+		<td width="50%">OCBC Branch / Outlet</td>
+		<td width="50%" style="text-align:left">
+			<span id="branchRow"><select id="OCBCBr">
+				<option value="OCBC Ampang">OCBC Ampang</option><option value="OCBC Bukit Damansara">OCBC Bukit Damansara</option>
+				<option value="OCBC Cheras">OCBC Cheras</option><option value="OCBC Kepong">OCBC Kepong</option>
+				<option value="OCBC KL Main">OCBC KL Main</option><option value="OCBC Kota Damansara">OCBC Kota Damansara</option>
+				<option value="OCBC Petaling Jaya">OCBC Petaling Jaya</option><option value="OCBC Rawang">OCBC Rawang</option>
+				<option value="OCBC Subang Jaya">OCBC Subang Jaya</option><option value="OCBC Wangsa Maju">OCBC Wangsa Maju</option>
+			</select></span>
+			<span id="merchantRow" style="display:none"><select id="MerchantsNw">
+				<option value="Aeon Maluri Guardian">Aeon Maluri Guardian</option>
+				<option value="Boost Juice KLCC">Boost Juice KLCC</option>
+				<option value="Chakra Palace Hotel">Chakra Palace Hotel</option>
+				<option value="JuiceWorks KLCC">JuiceWorks KLCC</option>
+				<option value="Watson Jalan Pudu">Watson, Jln Pudu</option>
+				<option value="Makro Cash & Carry Little India">Makro Cash & Carry, Little India</option>
+				<option value="Plato Restaurant Bukit Bintang">Plato Restaurant, Bukit Bintang</option>
+			</select></span>
+			<span id="fpxRow"  style="display:none"><select id="FpxNw">
+				<option value="N/A">Sorry, service not available yet</option>
+			</select></span>
+		</td>
+	</tr>
+	</table>
+	
+	<p class="pgTitle"><span class="pgTitleRed">SET AMOUNT</span> TO WITHDRAW:</p>
+	<table id="mcashTbl2" class="travel" style="width:100%"><tr>
+		<td width="50%">From Account</td>
+		<td width="50%"><select id="mcashAcc">
+			<option value="701-XXXXX547">Current A/C 701-XXXXX547</option>
+			<option value="701-XXXXX132">360 Account 701-XXXXX132</option>
+			</select>
+		</td>
+	</tr><tr>
+		<td >Amount (MYR)</td>
+		<td ><input id="mcashAmount" type="number"></td>
+	</tr>
+	</table> 
+	<a href="#" class="ui-btn ui-corner-all" onclick="
+		if (window.document.getElementById('mcashAmount').value != ''){
+			locType = window.document.getElementById('mcashType').options[window.document.getElementById('mcashType').selectedIndex].value;
+			loc = window.document.getElementById('OCBCBr').options[window.document.getElementById('OCBCBr').selectedIndex].value;
+			
+			if (locType == 'Merchants')
+			{ loc = window.document.getElementById('MerchantsNw').options[window.document.getElementById('MerchantsNw').selectedIndex].value; }
+			else if (locType == 'FPX') 
+			{ loc = window.document.getElementById('FpxNw').options[window.document.getElementById('FpxNw').selectedIndex].value; }
+			
+			window.document.getElementById('mcashLocation').innerText = loc;
+			window.document.getElementById('mcashAmt').innerText = window.document.getElementById('mcashAmount').value;
+			passcode = Math.floor(Math.random() * 1000000);
+			for (z = 1; z < 7; z++){
+				window.document.getElementById('mctq'+z).innerText = passcode.toString().substr(1-z, 1);
+			}
+			passcode = 0;
+			//window.document.getElementById('mcashType').selectedIndex = -1;
+			//window.document.getElementById('OCBCBr').selectedIndex = -1;
+			//window.document.getElementById('MerchantsNw').selectedIndex = -1;
+			//window.document.getElementById('FpxNw').selectedIndex = -1;
+			window.document.getElementById('mcashAmount').value = '';
+			window.document.getElementById('genMPassConfirmationMsg').innerHTML = 'Pass will be valid for only 15 mins.<br/>OK to proceed?';
+			window.document.getElementById('genMPassConfirmation').style.display = 'block';
+		}else{
+			window.document.getElementById('genMPassConfirmationMsg').innerHTML = 'Please enter amount to proceed';
+			window.document.getElementById('genMPassConfirmation').style.display = 'block';
+			return false;
+		}
+	";>Generate Withdrawal Pass</a>
+	
+	<div id="genMPassConfirmation" class="ui-corner-all" style="display:none;position: absolute; top:300px; left:10px; width:85%; background-color:lightGray; padding:15px; text-align:center;font-weight:bold"><span id="genMPassConfirmationMsg">Pass will be valid for only 15 mins.<br/>OK to proceed?</span>
+		<a data-role="button" href="#mcashPin" class="ui-btn ui-corner-all" onclick="
+			window.document.getElementById('genMPassConfirmation').style.display = 'none';
+			if (window.document.getElementById('genMPassConfirmationMsg').innerHTML == 'Please enter amount to proceed')
+				return false;
+		">OK</a>
+	</div>
+    </div>
+	
+	<!-- footer -->
+	<footer data-role="footer" class="ui-body-c" data-position="fixed">
+		<div data-role="navbar" >
+		<ul>
+		 <li><a href="#deal" data-icon="star" >Deals</a></li>
+		 <li><a href="#message" data-icon="mail" >My Messages</a></li>
+		 <li><a href="https://www.ocbc.com.my" data-icon="arrow-r" data-rel="external" >Go to Website</a></li>
+		</ul>
+		</div>
+	</footer>
+</div>
+<!-- /page -->
 
 <!-- Mobile Cash OCBC MPass page -->
 <div data-role="page" id="mobileCashOCBC">
