@@ -106,6 +106,13 @@ function onButtonClick() {
 <script src="script/Chart.bundle.js"></script>  <!-- http://www.chartjs.org/dist/2.7.1/Chart.bundle.js -->
 <script src="script/utils.js"></script>  <!-- http://www.chartjs.org/samples/latest/utils.js -->
 <script>
+function showLoading(){
+	//document.getElementById('loading').style.z-index='2'; 
+	document.getElementById('loading').style.display='block'; 
+	setTimeout(function(){ document.getElementById('loading').style.display = 'none'; return true;  }, 5000);
+	returm false;
+}
+
 function calcAmt(){
 	var totalAmt=0;
 	for (x=1; x < 8; x++){
@@ -117,7 +124,7 @@ function calcAmt(){
 </head>
 
 <body onload="initializeMap();">
-
+<!--<img src="img/loading.gif" width="200" height="200" style="display:block; z-index:2; margin-top:155pt; margin-left:45pt" />  -->
 <!-- Login Page -->
 <div data-role="page" id="loginPage" data-title="OCBC Razor by Move'm">
 	<div data-role="header" data-position="fixed" data-theme="a" font-size="9pt">
@@ -350,8 +357,9 @@ function calcAmt(){
 			<td><span id="qrCurrency" class="titleGreen"></span>&nbsp;&nbsp;<span id="qrAmount" class="titleGreen"></span></td>
 		</tr>
 		</table>
-		<a data-role="button" href="#mobileWalletOptions" class="ui-btn ui-corner-all">Proceed To Pay</a>
+		<a data-role="button" href="#mobileWalletOptions" class="ui-btn ui-corner-all" onclick="showLoading();">Proceed To Pay</a>
 	</p>
+	<img src="img/loading.gif" width="200" height="200" id="loading" style="display:block; z-index:1; margin-top:155pt; margin-left:45pt" />
 	</div>
 	
 	<!-- footer -->
