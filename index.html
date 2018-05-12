@@ -350,6 +350,7 @@ function yearsToMonths(year,frequency) {
 	<!-- for QR Code scanner -->
 	<input type="button" id="camera" value="Capture QR Code" onclick="
 	// capture callback
+	alert('start');
 	var captureSuccess = function(mediaFiles) {
 		var i, path, len;
 		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
@@ -367,7 +368,7 @@ function yearsToMonths(year,frequency) {
 				document.getElementById('qrDesc').innerText = 'Sunway Geo Residences 2';
 				document.getElementById('qrCurrency').innerText = 'MYR';
 				document.getElementById('qrAmount').innerText = '650,000';
-				document.getElementById('liIPP;).style.display = 'none';
+				//document.getElementById('liIPP;).style.display = 'none';
 				qrCount = 1;
 			};
 			document.getElementById('qrResultFld').style.display = 'block';
@@ -867,7 +868,7 @@ function yearsToMonths(year,frequency) {
 				var i, path, len;
 				for (i = 0, len = mediaFiles.length; i < len; i += 1) {
 					path = mediaFiles[i].fullPath;
-					document.getElementById(doc1Path).innerText = path;
+					document.getElementById('doc1Path').innerText = path;
 				}
 			};
 			var captureError = function(error) {
@@ -888,7 +889,7 @@ function yearsToMonths(year,frequency) {
 				var i, path, len;
 				for (i = 0, len = mediaFiles.length; i < len; i += 1) {
 					path = mediaFiles[i].fullPath;
-					document.getElementById(doc2Path).innerText = path;
+					document.getElementById('doc2Path').innerText = path;
 				}
 			};
 			var captureError = function(error) {
