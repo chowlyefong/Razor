@@ -22,12 +22,6 @@
  var saved = 13000;
  //QR counter
  var qrCount = 1;
- //schedule Exp List item
- var liID = 1;
- var liID2 = 1;
- //credit card limit;
- var c365limit = 20000;
- var cWorldlimit = 30000;
  
  var map;
  function initializeMap() {
@@ -108,11 +102,9 @@ function onButtonClick() {
 <script src="script/Chart.bundle.js"></script>  <!-- http://www.chartjs.org/dist/2.7.1/Chart.bundle.js -->
 <script src="script/utils.js"></script>  <!-- http://www.chartjs.org/samples/latest/utils.js -->
 <script>
-function showLoading(){
-	//document.getElementById('loading').style.z-index='2'; 
-	document.getElementById('loading').style.display='block'; 
-	setTimeout(function(){ document.getElementById('loading').style.display = 'none'; return true;  }, 5000);
-	returm false;
+function showLoading(element, numSeconds){
+	document.getElementById(element).style.display = "block"; 
+	setTimeout(function(){ document.getElementById(element).style.display = "none";}, numSeconds);
 }
 
 function calcAmt(){
@@ -120,13 +112,46 @@ function calcAmt(){
 	for (x=1; x < 8; x++){
 		totalAmt = totalAmt + parseInt(document.getElementById('amt'+x).value);
 	}
-	document.getElementById('totalAmt').innerText = totalAmt.toString();
+	document.getElementById('totalAmt').innerText = totalAmt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function getInterestRate(tenure){
+	var intRates = [0, 5, 4.75, 4.5, 4.4, 4.3, 4.2, 4.1];
+	var intStep = tenure/5;
+	return intRates[intStep];
+}
+
+function calculateMortgage(p, r, n, f) {  //param: amount, interest, term, frequency
+	r = percentToDecimal(r); //convert percentage to a decimal
+	n = yearsToMonths(n,f); //convert years to months
+	var pmt = (r * p) / (1 - (Math.pow((1 + r), (-n)))); //c=
+	((p*r)*Math.pow((1+r),n))/(Math.pow(1+r),n)-1
+	return parseFloat(pmt.toFixed(2)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+
+function percentToDecimal(percent) {        //Change the percent entered to a decimal
+	return (percent / 12) / 100;
+}
+
+function yearsToMonths(year,frequency) {
+	if(frequency == "week"){
+		return year * 52;
+	}
+	if(frequency == "fortnight"){
+		return year * 26;
+	}
+	if(frequency == "quarter"){
+		return year * 4;
+	}
+	return year * 12;
 }
 </script>
+<script src="cordova.js"></script>
 </head>
 
 <body onload="initializeMap();">
-<!--<img src="img/loading.gif" width="200" height="200" style="display:block; z-index:2; margin-top:155pt; margin-left:45pt" />  -->
+<p id="loadingInit" style="margin:20pt;background-color:white;display:block" ><img src="img/loading.gif" width="200" height="200" style="display:block; z-index:2; margin-top:155pt; margin-left:45pt" /> </p>
 <!-- Login Page -->
 <div data-role="page" id="loginPage" data-title="OCBC Swing by Move'm">
 	<div data-role="header" data-position="fixed" data-theme="a" font-size="9pt">
@@ -479,6 +504,8 @@ function calcAmt(){
 	</div>
 	<!---- Content --->
     <div role="main" class="ui-content">
+	<div id="loadingCD" style="padding-top:135pt;padding-left:65pt;width:80%;height:60%;background-color:white;display:none;float:center;z-index:2;position:absolute;" ><img src="img/loading.gif" width="200" height="200" /> </div>
+		
 	<p class="pgTitle"><span class="pgTitleRed">CHOOSE CASA</span> FOR DIRECT DEBIT:</p>
 	<table id="mcashTbl" class="travel" style="width:100%"><tr>
 		<td width="30%" style="text-align:center">Accounts</td>
@@ -524,11 +551,11 @@ function calcAmt(){
 	</tr><tr>
 		<td colspan=2 style="text-align:right" class="brTitle">TOTAL TO WITHDRAW:</td>
 		<td style="text-align:left"><b>MYR</b></td>
-		<td style="text-align:right"><span id="totalAmt" class="brTitle">19319</span></td>
+		<td style="text-align:right"><span id="totalAmt" class="brTitle">19,319</span></td>
 	</tr><tr>
 		<td colspan=2 style="text-align:right" class="titleBlue">TOTAL REQUIRED:</td>
 		<td style="text-align:left"><b>MYR</b></td>
-		<td style="text-align:right"><span id="totalReq" class="titleBlue">19319</span></td>
+		<td style="text-align:right"><span id="totalReq" class="titleBlue">19,319</span></td>
 	</tr>
 	</table>
 	
@@ -537,6 +564,7 @@ function calcAmt(){
 			window.document.getElementById('qrCASAMsg').innerHTML = 'Total amount is insufficient for the purchase. Total must be MYR 19,319';
 			window.document.getElementById('qrCASA').style.display = 'block';
 		}else{
+			showLoading('loadingCD', 3000);
 			window.document.getElementById('qrCASAMsg').innerHTML = 'Payment successful. Enjoy your shopping!';
 			window.document.getElementById('qrCASA').style.display = 'block';
 			return false;
@@ -591,6 +619,8 @@ function calcAmt(){
 	</div>
 	<!---- Content --->
     <div role="main" class="ui-content">
+	<div id="loadingIPP" style="padding-top:135pt;padding-left:65pt;width:80%;height:60%;background-color:white;display:none;float:center;z-index:2;position:absolute;" ><img src="img/loading.gif" width="200" height="200" /> </div>
+		
 	<p class="pgTitle"><span class="pgTitleRed">EASY PAYMENT</span> INSTALLMENT PLAN:</p>
 	<table id="ippTbl" class="travel" style="width:100%"><tr>
 		<td width="50%">Amount Required</td>
@@ -644,10 +674,11 @@ function calcAmt(){
 		</ol>
 	</p>
 	<a href="#" class="ui-btn ui-corner-all" onclick="
-		if (window.document.getElementById('ippAutoDebit').selectedIndex == 2){
+		if (window.document.getElementById('ippAutoDebit').selectedIndex == 1){
 			window.document.getElementById('qrIPPMsg').innerHTML = 'You have chosen to purchase using Easy Pay Plan without monthly auto-debit setup.<br/><br/>OK to proceed?';
 			window.document.getElementById('qrIPP').style.display = 'block';
 		}else{
+			showLoading('loadingIPP', 3000);
 			window.document.getElementById('qrIPPMsg').innerHTML = 'Your purchase with Easy Pay Plan is successful. Enjoy your shopping!';
 			window.document.getElementById('qrIPP').style.display = 'block';
 			return false;
@@ -657,7 +688,8 @@ function calcAmt(){
 	<div id="qrIPP" class="ui-corner-all" style="display:none;position: absolute; top:300px; left:10px; width:85%; background-color:lightGray; padding:15px; text-align:center;font-weight:bold"><span id="qrIPPMsg">Your purchase with Easy Pay Plan is successful. Enjoy your shopping!</span>
 		<a data-role="button" href="#mobileWallet" class="ui-btn ui-corner-all" onclick="
 			window.document.getElementById('qrIPP').style.display = 'none';
-			if (window.document.getElementById('ippAutoDebit').selectedIndex == 2){
+			if (window.document.getElementById('ippAutoDebit').selectedIndex == 1){
+				showLoading('loadingIPP', 3000);
 				window.document.getElementById('qrIPPMsg').innerHTML = 'Your purchase with Easy Pay Plan is successful. Enjoy your shopping!';
 				window.document.getElementById('qrIPP').style.display = 'block';
 				window.document.getElementById('ippAutoDebit').selectedIndex = 0;
@@ -706,102 +738,271 @@ function calcAmt(){
 	</div>
 	<!---- Content --->
     <div role="main" class="ui-content">
-	<p class="pgTitle"><span class="pgTitleRed">LOCATION</span> TO WITHDRAW CASH:</p>
-	<table id="mcashTbl" class="travel" style="width:100%"><tr>
-		<td width="50%">Location Type</td>
-		<td width="50%" style="text-align:left"><select id="mcashType" onchange="
-			window.document.getElementById('branchRow').style.display = 'none';
-			window.document.getElementById('merchantRow').style.display = 'none';
-			window.document.getElementById('fpxRow').style.display = 'none';
-		
-			if (this.selectedIndex == 0) {window.document.getElementById('branchRow').style.display = 'block'; }
-			else if (this.options[this.selectedIndex].value == 'Merchants') {window.document.getElementById('merchantRow').style.display = 'block'; }
-			else if (this.options[this.selectedIndex].value == 'FPX') {window.document.getElementById('fpxRow').style.display = 'block'; }
-			">
-			<option value="OCBC">OCBC Branches</option>
-			<option value="Merchants">OCBC Merchants</option>
-			<option value="FPX">FPX Merchants - Coming Soon!</option>
-			</select>
-		</td>
+	<div id="loadingFin" style="padding-top:135pt;padding-left:65pt;width:80%;height:60%;background-color:white;display:none;float:center;z-index:2;position:absolute;" ><img src="img/loading.gif" width="200" height="200" /> </div>
+	
+	<p class="pgTitle"><span class="pgTitleRed">FINANCING</span> OPTIONS:</p>
+	<table id="finTbl" class="travel" style="width:100%">
+	<tr>
+		<td width="40%">Asset Value</i></td>
+		<td width="60%" style="text-align:left"><b>MYR <span id="assetVal">650,000</span></b></td>
 	</tr><tr>
-		<td width="50%">OCBC Branch / Outlet</td>
-		<td width="50%" style="text-align:left">
-			<span id="branchRow"><select id="OCBCBr">
-				<option value="OCBC Ampang">OCBC Ampang</option><option value="OCBC Bukit Damansara">OCBC Bukit Damansara</option>
-				<option value="OCBC Cheras">OCBC Cheras</option><option value="OCBC Kepong">OCBC Kepong</option>
-				<option value="OCBC KL Main">OCBC KL Main</option><option value="OCBC Kota Damansara">OCBC Kota Damansara</option>
-				<option value="OCBC Petaling Jaya">OCBC Petaling Jaya</option><option value="OCBC Rawang">OCBC Rawang</option>
-				<option value="OCBC Subang Jaya">OCBC Subang Jaya</option><option value="OCBC Wangsa Maju">OCBC Wangsa Maju</option>
-			</select></span>
-			<span id="merchantRow" style="display:none"><select id="MerchantsNw">
-				<option value="Aeon Maluri Guardian">Aeon Maluri Guardian</option>
-				<option value="Boost Juice KLCC">Boost Juice KLCC</option>
-				<option value="Chakra Palace Hotel">Chakra Palace Hotel</option>
-				<option value="JuiceWorks KLCC">JuiceWorks KLCC</option>
-				<option value="Watson Jalan Pudu">Watson, Jln Pudu</option>
-				<option value="Makro Cash & Carry Little India">Makro Cash & Carry, Little India</option>
-				<option value="Plato Restaurant Bukit Bintang">Plato Restaurant, Bukit Bintang</option>
-			</select></span>
-			<span id="fpxRow"  style="display:none"><select id="FpxNw">
-				<option value="N/A">Sorry, service not available yet</option>
-			</select></span>
-		</td>
+		<td width="40%">Downpayment <i>(%)</i></td>
+		<td width="60%" style="text-align:left"><input type="range" id="sliderDown" value="10" min="10" max="50" step="5" data-highlight="true" data-mini="true" onChange="
+		var assetAmt = parseInt(document.getElementById('assetVal').innerText.replace(',', ''));
+		var downAmt = parseInt(this.value)/100 * assetAmt;
+		var loanAmt = assetAmt - downAmt;
+		document.getElementById('downPayment').innerText = downAmt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+		document.getElementById('loanAmt').innerText = loanAmt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+		var tenure = document.getElementById('sliderTen').value;
+		document.getElementById('interestRate').innerText = getInterestRate(tenure);
+		document.getElementById('mthAmt').innerText = calculateMortgage(loanAmt, getInterestRate(tenure), tenure, 'monthly');"></td>
+	</tr><tr>
+		<td width="40%">Downpayment Amount</td>
+		<td width="60%" style="text-align:left"><b>MYR <span id="downPayment">65,000</span></b></td>
+	</tr><tr>
+		<td>Financing Amount</td>
+		<td style="text-align:left"><b>MYR <span id="loanAmt">585,000</span></b></td>
+	</tr><tr>
+		<td>Tenure <i>(in years)</i></td>
+		<td style="text-align:left"><input type="range" id="sliderTen" value="10" min="5" max="35" step="5" data-highlight="true" data-mini="true" onChange="
+		var loanAmt = parseInt(document.getElementById('loanAmt').innerText.replace(',', ''));
+		var tenure = parseInt(this.value);
+		document.getElementById('interestRate').innerText = getInterestRate(tenure);
+		document.getElementById('mthAmt').innerText = calculateMortgage(loanAmt, getInterestRate(tenure), tenure, 'monthly');		
+		"></td>
+	</tr><tr>
+		<td>Interest Rate <i>(%)</i></td>
+		<td style="text-align:left"><b><span id="interestRate">4.75</span></b></td>
+	</tr><tr>
+		<td>Monthly Repayment </td>
+		<td style="text-align:left" class="titleGreen"><b>MYR <span id="mthAmt">6,133.59</span></b></td>
+	</tr><tr>
+		<td colspan="2"><br/>The above proposed loan package is calculated based on your credit score, income statements and analysis of your repayment ability. Should you require a customized package, <a href="#setupAppointment">make an appointment</a> with our dedicated consultants.</td>
 	</tr>
 	</table>
 	
-	<p class="pgTitle"><span class="pgTitleRed">SET AMOUNT</span> TO WITHDRAW:</p>
-	<table id="mcashTbl2" class="travel" style="width:100%"><tr>
-		<td width="50%">From Account</td>
-		<td width="50%"><select id="mcashAcc">
-			<option value="701-XXXXX547">Current A/C 701-XXXXX547</option>
-			<option value="701-XXXXX132">360 Account 701-XXXXX132</option>
-			</select>
-		</td>
+	<p class="pgTitle"><span class="pgTitleRed">PAY FOR DOWNPAYMENT</span> USING:</p>
+	<table id="finTbl2" class="travel" style="width:100%;" cellpadding=0 cellspacing=0><tr>
+		<td width="30%">From </td>
+		<td width="70%" align="left">
+			<fieldset data-role="controlgroup" data-mini="true" data-type="horizontal" onchange="
+					if (document.getElementById('radiomini1').checked){
+						document.getElementById('cardDown').style.display = 'block';
+						document.getElementById('casaDown').style.display = 'none';
+					}else{
+						document.getElementById('cardDown').style.display = 'none';
+						document.getElementById('casaDown').style.display = 'block';
+					}">
+					<input type="radio" name="radio-mini" id="radiomini1" value="card" checked="checked"  />
+					<label for="radiomini1">Credit Card</label>
+
+					<input type="radio" name="radio-mini" id="radiomini2" value="casa"  />
+					<label for="radiomini2">CASA</label>
+			</fieldset>
 	</tr><tr>
-		<td >Amount (MYR)</td>
-		<td ><input id="mcashAmount" type="number"></td>
+		<td >Account</td>
+		<td ><span id="casaDown" style="display:none">
+		<select id="CASA" data-mini="true" >
+			<option value="OCBC 7142xxxx35">OCBC 7142xxxx35</option>
+			<option value="MBB 1015xxxxxxx43">MBB 1015xxxxxxx43</option>
+			<option value="HSBC 6425xxxxxxx11">HSBC 6425xxxxxxx11</option>
+			<option value="HLB 4273xxxxxxx87">HLB 4273xxxxxxx87</option>
+		</select></span>
+		<span id="cardDown" style="display:block"><select id="Card" data-mini="true" >
+		<option value="HSBCVisa">HSBC - Visa ending 6390</option>
+		<option value="UOBMC">UOB - Mastercard ending 2321</option>
+		</select>
+		</span>
+		</td>
 	</tr>
 	</table> 
-	<a href="#" class="ui-btn ui-corner-all" onclick="
-		if (window.document.getElementById('mcashAmount').value != ''){
-			locType = window.document.getElementById('mcashType').options[window.document.getElementById('mcashType').selectedIndex].value;
-			loc = window.document.getElementById('OCBCBr').options[window.document.getElementById('OCBCBr').selectedIndex].value;
-			
-			if (locType == 'Merchants')
-			{ loc = window.document.getElementById('MerchantsNw').options[window.document.getElementById('MerchantsNw').selectedIndex].value; }
-			else if (locType == 'FPX') 
-			{ loc = window.document.getElementById('FpxNw').options[window.document.getElementById('FpxNw').selectedIndex].value; }
-			
-			window.document.getElementById('mcashLocation').innerText = loc;
-			window.document.getElementById('mcashAmt').innerText = window.document.getElementById('mcashAmount').value;
-			passcode = Math.floor(Math.random() * 1000000);
-			for (z = 1; z < 7; z++){
-				window.document.getElementById('mctq'+z).innerText = passcode.toString().substr(1-z, 1);
-			}
-			passcode = 0;
-			//window.document.getElementById('mcashType').selectedIndex = -1;
-			//window.document.getElementById('OCBCBr').selectedIndex = -1;
-			//window.document.getElementById('MerchantsNw').selectedIndex = -1;
-			//window.document.getElementById('FpxNw').selectedIndex = -1;
-			window.document.getElementById('mcashAmount').value = '';
-			window.document.getElementById('genMPassConfirmationMsg').innerHTML = 'Pass will be valid for only 15 mins.<br/>OK to proceed?';
-			window.document.getElementById('genMPassConfirmation').style.display = 'block';
-		}else{
-			window.document.getElementById('genMPassConfirmationMsg').innerHTML = 'Please enter amount to proceed';
-			window.document.getElementById('genMPassConfirmation').style.display = 'block';
-			return false;
-		}
-	";>Generate Withdrawal Pass</a>
+	<a href="#mobileWalletFin2" data-role="button" data-icon="check" data-iconpos="right">Next</a>
+	</div>
 	
-	<div id="genMPassConfirmation" class="ui-corner-all" style="display:none;position: absolute; top:300px; left:10px; width:85%; background-color:lightGray; padding:15px; text-align:center;font-weight:bold"><span id="genMPassConfirmationMsg">Pass will be valid for only 15 mins.<br/>OK to proceed?</span>
-		<a data-role="button" href="#mcashPin" class="ui-btn ui-corner-all" onclick="
-			window.document.getElementById('genMPassConfirmation').style.display = 'none';
-			if (window.document.getElementById('genMPassConfirmationMsg').innerHTML == 'Please enter amount to proceed')
-				return false;
+	<!-- footer -->
+	<footer data-role="footer" class="ui-body-c" data-position="fixed">
+		<div data-role="navbar" >
+		<ul>
+		 <li><a href="#deal" data-icon="star" >Deals</a></li>
+		 <li><a href="#message" data-icon="mail" >My Messages</a></li>
+		 <li><a href="https://www.ocbc.com.my" data-icon="arrow-r" data-rel="external" >Go to Website</a></li>
+		</ul>
+		</div>
+	</footer>
+</div>
+<!-- /page -->
+
+<!-- Financing Application -->
+<div data-role="page" id="mobileWalletFin2">
+	<div data-role="header" data-position="fixed" data-theme="a">
+		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> Swing - Mobile Wallet</p>
+		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-left">
+            <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelFA">Menu</a>
+        </div>
+		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
+            <a data-icon="gear" data-iconpos="notext" data-role="button" href="#settingPage">Settings</a>
+        </div>
+	</div>
+	<!---  Menu ------>
+	<div data-role="panel" id="menuPanelFA" data-display="overlay">
+    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" /> Swing</p> 
+    <ul data-role="listview">
+		<li><a href="#myAccount">My Account</a></li>
+		<li><a href="#mobileWallet">Mobile Wallet</a></li>
+		<li><a href="#fundTransfer">Instant Transfer</a></li>
+		<li><a href="#myApplication">My Applications</a></li>
+		<li><a data-icon="arrow-r" data-role="button" href="#loginPage">Logout</a></li>
+		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/conditions-of-access.html">Terms of Usage</a></li>
+		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/security-privacy.html">Privacy Policy</a></li>
+    </ul>
+	</div>
+	<!---- Content --->
+    <div role="main" class="ui-content">
+	<div id="loadingFApp" style="padding-top:135pt;padding-left:65pt;width:80%;height:60%;background-color:white;display:none;float:center;z-index:2;position:absolute;" ><img src="img/loading.gif" width="200" height="200" /> </div>
+	
+	<p class="pgTitle"><span class="pgTitleRed">UPLOAD SUPPORTING</span> DOCUMENTS:</p>
+	<table id="fappTbl" class="travel" style="width:100%" cellspacing=0 cellpadding=0><tr>
+		<td width="40%">Asset Booking Form</td>
+		<td width="10%" style="text-align:left"><a data-role="button" data-icon="camera" data-iconpos="right" id="cameraDoc1" onclick="
+			var captureSuccess = function(mediaFiles) {
+				var i, path, len;
+				for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+					path = mediaFiles[i].fullPath;
+					document.getElementById(doc1Path).innerText = path;
+				}
+			};
+			var captureError = function(error) {
+				navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
+			};
+
+			// start image capture
+			navigator.device.capture.captureImage(captureSuccess, captureError, {limit:1});
+			"></td>
+		<td width="50%"><span id="doc1Path"></span></td>
+	</tr><tr>
+		<td width="40%">Latest EA Form</td>
+		<td width="60%" colspan="2" style="text-align:left"><input type="file" id="uploadEA"></td>
+	</tr><tr>
+		<td width="40%">NRIC</td>
+		<td width="10%" style="text-align:left"><a data-role="button" data-icon="camera" data-iconpos="right" id="cameraDoc2" onclick="
+			var captureSuccess = function(mediaFiles) {
+				var i, path, len;
+				for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+					path = mediaFiles[i].fullPath;
+					document.getElementById(doc2Path).innerText = path;
+				}
+			};
+			var captureError = function(error) {
+				navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
+			};
+
+			// start image capture
+			navigator.device.capture.captureImage(captureSuccess, captureError, {limit:1});
+			"></td>
+		<td width="50%"><span id="doc2Path"></span></td>
+	</tr>
+	</table>
+	
+	<p class="pgTitle"><span class="pgTitleRed">TERMS</span> OF FINANCING:</p>
+	<table id="finTbl2" class="travel" style="width:100%;" cellpadding=0 cellspacing=0><tr>
+		<td width="100%" align="left">
+			<fieldset data-role="controlgroup" data-mini="true">
+					<a href="#" data-role="button" data-icon="check">Credit checks passed</a>
+					<a href="#" data-role="button" data-icon="check">Income statement checks passed</a>
+					<a href="#" data-role="button" data-icon="check">Deposit checks passed</a>
+			</fieldset>
+	</tr><tr>
+		<td><br/>
+		<ul><li>You are eligible for a pre-approve financing based on the options selected.</li>
+		<li>Final approval will be subjected to the review of all provided documents.</li>
+		<li>You may monitor the status & complete the full application via the app within 5 business days</li></ul></td>
+	</tr>
+	</table> 
+	<a href="#" class="ui-btn ui-corner-all" onclick="showLoading('loadingFApp', 5000); window.document.getElementById('applyFin').style.display = 'block';">Apply for Financing</a>
+	
+	<div id="applyFin" class="ui-corner-all" style="display:none;position: absolute; top:300px; left:10px; width:85%; background-color:lightGray; padding:15px; text-align:center;font-weight:bold"><span id="applyFinMsg">Congratulation, your financing application #201805290043 is pre-approved !<br/><br/>Track & follow up the full application status via 'My Application'<br/></span>
+		<a data-role="button" href="#mobileWallet" class="ui-btn ui-corner-all" onclick="
+			window.document.getElementById('applyFin').style.display = 'none';
 		">OK</a>
 	</div>
     </div>
 	
+	<!-- footer -->
+	<footer data-role="footer" class="ui-body-c" data-position="fixed">
+		<div data-role="navbar" >
+		<ul>
+		 <li><a href="#deal" data-icon="star" >Deals</a></li>
+		 <li><a href="#message" data-icon="mail" >My Messages</a></li>
+		 <li><a href="https://www.ocbc.com.my" data-icon="arrow-r" data-rel="external" >Go to Website</a></li>
+		</ul>
+		</div>
+	</footer>
+</div>
+<!-- /page -->
+
+<!-- Appointment Setup page -->
+<div data-role="page" id="setupAppointment">
+	<div data-role="header" data-position="fixed" data-theme="a">
+		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> Swing - Setup Appointment</p>
+		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-left">
+            <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelAp">Menu</a>
+        </div>
+		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
+            <a data-icon="gear" data-iconpos="notext" data-role="button" href="#settingPage">Settings</a>
+        </div>
+	</div>
+	<!---  Menu ------>
+	<div data-role="panel" id="menuPanelAp" data-display="overlay">
+    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" />  Swing</p> 
+    <ul data-role="listview">
+		<li><a href="#myAccount">My Account</a></li>
+		<li><a href="#mobileWallet">Mobile Wallet</a></li>
+		<li><a href="#fundTransfer">Instant Transfer</a></li>
+		<li><a href="#myApplication">My Applications</a></li>
+		<li><a data-icon="arrow-r" data-role="button" href="#loginPage">Logout</a></li>
+		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/conditions-of-access.html">Terms of Usage</a></li>
+		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/security-privacy.html">Privacy Policy</a></li>
+    </ul>
+	</div>
+	<!---- Content --->
+    <div role="main" class="ui-content">
+	<p class="pgTitle"><span class="pgTitleRed">BOOK A DATE</span> TO DISCUSS:</p>
+	<table id="apptTbl" class="travel"><tr>
+		<td width="10%"><input type="checkbox" id="box1" /> </td>
+		<td width="15%" style="text-align:center"><img src="img/everydayBanking.png" width="40" height="40" /></td>
+		<td width="20%">Everyday Banking</td>
+		<td width="55%" class="font-small">
+			<ul><li>Saving & Rates</li><li>Personal Loan</li><li>Cards & Security</li><li>Rewards & Treats</li></ul></td>
+	</tr><tr>
+		<td ><input type="checkbox" id="box2" /></td>
+		<td style="text-align:center"><img src="img/investment.png" width="40" height="40" /></td>
+		<td>Investment & Wealth Planning</td>
+		<td class="font-small">
+			<ul><li>Retirement</li><li>Child Education</li><li>Health & Protection</li><li>Wealth Transfer</li></ul></td>
+	</tr><tr>
+		<td><input type="checkbox" id="box3" /></td>
+		<td style="text-align:center"><img src="img/businessBanking.png" width="40" height="40" /></td>
+		<td>Business Banking</td>
+		<td class="font-small">
+			<ul><li>SME Loan</li><li>Business Loan</li><li>Trade Financing</li><li>Corporate Insurance</li></ul></td>
+	</tr>
+	</table>
+	
+	<p class="pgTitle"><span class="pgTitleRed">I AM AVAILABLE</span> TO DISCUSS ON:</p>
+	<table id="apptTbl2" class="travel"><tr>
+			<td width="50%">Date <input id="dtAppt" type="date" value="2017-11-24"></td>
+			<td width="50%">Time <input id="timeAppt" type="time" value="10:00:00"></td>
+	</tr>
+	</table> 
+	<a data-rel="popup" href="#" class="ui-btn ui-corner-all blue" data-position-to="window" onclick="window.document.getElementById('saveAppt').style.display = 'block';">Save</a>
+	
+	<div id="saveAppt" class="ui-corner-all" style="display:none;position: absolute; z-index:2; top:250px; left:10px; width:85%; background-color:lightGray; padding:15px; text-align:center;font-weight:bold">Appointment saved. Our relationship manager will be contacting you soon!
+		<a data-role="button" href="#" class="ui-btn ui-corner-all" onclick="
+			window.document.getElementById('saveAppt').style.display = 'none';
+		">OK</a>
+		</div>
+    </div>
+
 	<!-- footer -->
 	<footer data-role="footer" class="ui-body-c" data-position="fixed">
 		<div data-role="navbar" >
@@ -846,7 +1047,7 @@ function calcAmt(){
 		<tr>
 			<td width="40%"><b>Transfer Type:</b></td>
 			<td width="60%" style="text-align:left"><div class="flipSwitch">
-			<select id="flip1" name="flip1" data-role="slider">
+			<select id="flip1" name="flip1" data-role="slider" data-mini="true">
 					<option value="International">International</option>
 					<option value="Domestic" selected>Domestic</option>
 			</select></div></td>
@@ -916,648 +1117,10 @@ function calcAmt(){
 </div>
 <!-- /page -->
 
-<!-- Schedule Expenses page -->
-<div data-role="page" id="scheduleExpenses">
-	<div data-role="header" data-position="fixed" data-theme="a">
-		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> OneLife - Scheduled Expenses</p>
-		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-left">
-            <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelE">Menu</a>
-        </div>
-		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
-            <a data-icon="gear" data-iconpos="notext" data-role="button" href="#settingPage">Settings</a>
-        </div>
-	</div>
-	<!---  Menu ------>
-	<div data-role="panel" id="menuPanelE" data-display="overlay">
-    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" /> OneLife</p> 
-    <ul data-role="listview">
-		<li><a href="#myAccount">My Account</a></li>
-		<li><a href="#mobileCash">Mobile Cash</a></li>
-		<li><a href="#nearestBr" onclick="
-			window.document.getElementById('klmQueue').innerText = noCustKLM.toString();
-			window.document.getElementById('ampQueue').innerText = noCustAMP.toString();">Nearest Branch</a></li>
-		<li><a href="#setupAppointment">Setup Appointment</a></li>
-		<li><a href="#myGoals">My Goals</a></li>
-		<li><a href="#scheduleExpenses">Schedule Expenses</a></li>
-		<li><a href="#manageCard">Manage My Card</a></li>
-		<li><a href="#setupTravel">I am Traveling!</a></li>
-		<li><a data-icon="arrow-r" data-role="button" href="#loginPage">Logout</a></li>
-		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/conditions-of-access.html">Terms of Usage</a></li>
-		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/security-privacy.html">Privacy Policy</a></li>
-    </ul>
-	</div>
-	<!---- Content --->
-    <div role="main" class="ui-content">
-	<p class="pgTitle"><span class="pgTitleRed">SUMMARY</span> FOR CURRENT MONTH:</p>
-	<table id="expTbl" class="travel" style="width:100%"><tr>
-		<td width="50%">Primary CASA</td>
-		<td width="50%" style="text-align:left">701-XXXXX547</td>
-	</tr><tr>
-		<td>Current Balance</td>
-		<td style="text-align:left"><b>MYR <span id="casaBal">9200</span></b></td>
-	</tr><tr>
-		<td>Scheduled Expenses</td>
-		<td style="text-align:left" class="titleBlue">MYR <span id="totalExp">650</span></td>
-	</tr><tr>
-		<td>Safe-to-Spend</td>
-		<td style="text-align:left" class="titleGreen">MYR <span id="safeSpend">8550</span></td>
-	</tr>
-	</table>
-	
-	<p class="pgTitle"><span class="pgTitleRed">BOOK SCHEDULE</span> EXPENSES:</p>
-	<table id="expTbl2" class="travel" cellspacing=0 cellpadding=0><tr>
-		<td width="50%">Expected Date to Spend</td>
-		<td width="50%"><input id="dtExp" type="date" ></td>
-	</tr><tr>
-		<td >Description</td>
-		<td ><input id="descExp" type="text"></td>
-	</tr><tr>
-		<td >Amount (MYR)</td>
-		<td ><input id="amtExp" type="text"></td>
-	</tr>
-	</table> 
-	<a data-rel="popup" href="#saveExpense" class="ui-btn ui-corner-all ui-mini" data-position-to="window" onclick="
-	if (window.document.getElementById('dtExp').value == '' || window.document.getElementById('descExp').value == '' || window.document.getElementById('amtExp').value == ''){
-		window.document.getElementById('saveExpenseMsg').innerText = 'Please fill up the form before saving.';
-	}else{
-		var yr = window.document.getElementById('dtExp').value.substr(0,4);
-		var mth = window.document.getElementById('dtExp').value.substr(5,2);
-		var day = window.document.getElementById('dtExp').value.substr(8,2);
-		var d = window.document.getElementById('dtExp').value;
-		var expDate = new Date(d);
-		var today = new Date(); 
-		var bal = parseInt(window.document.getElementById('safeSpend').innerText); 
-		var expense = parseInt(window.document.getElementById('totalExp').innerText); 
-		var expAmt = parseInt(window.document.getElementById('amtExp').value); 
-		if (expDate >= today && parseInt(mth) == 11)){ 
-			window.document.getElementById('safeSpend').innerText = bal - expAmt;
-			window.document.getElementById('totalExp').innerText = expense + expAmt;
-			//reflect Safe-to-Spend in My Account page
-			window.document.getElementById('accSafe1').innerText = bal - expAmt;
-			//reflect in view Expenses page (Nov)
-			window.document.getElementById('novDt'+ liID).innerText = d.substr(8,2) + '/Nov/' + d.substr(0,4);
-			window.document.getElementById('novDesc'+ liID).innerText = window.document.getElementById('descExp').value;
-			window.document.getElementById('novAmt'+ liID).innerText = window.document.getElementById('amtExp').value;
-			window.document.getElementById('novExp'+ liID).style.display = 'block';
-			liID = liID + 1;
-		}else if (parseInt(mth) == 12){
-			//reflect in view Expenses page (Dec)
-			window.document.getElementById('decDt'+ liID2).innerText = d.substr(8,2) + '/Dec/' + d.substr(0,4);
-			window.document.getElementById('decDesc'+ liID2).innerText = window.document.getElementById('descExp').value;
-			window.document.getElementById('decAmt'+ liID2).innerText = window.document.getElementById('amtExp').value;
-			window.document.getElementById('decExp'+ liID2).style.display = 'block';
-			liID2 = liID2 + 1;
-		}
-		window.document.getElementById('dtExp').value = '';
-		window.document.getElementById('amtExp').value = '';
-		window.document.getElementById('descExp').value = '';
-		window.document.getElementById('saveExpenseMsg').innerText = 'Your record has been saved.';
-	}
-	window.document.getElementById('saveExpense').style.display = 'block';
-	">Save</a>
-	<div id="saveExpense" class="ui-corner-all" style="display:none;position: absolute; top:250px; left:10px; width:85%; background-color:lightGray; padding:15px; text-align:center;font-weight:bold"><span id="saveExpenseMsg">Your record has been saved.</span>
-		<a data-role="button" href="#" class="ui-btn ui-corner-all" onclick="
-			window.document.getElementById('saveExpense').style.display = 'none';
-		">OK</a>
-	</div>
-	
-	<p class="pgTitle"><span class="pgTitleRed">VIEW SCHEDULED</span> EXPENSES:</p>
-	<ul data-role="listview" data-inset="true" class="ui-mini">
-		<li><a href="#viewScheduleExp"><img src="img/scheduleExp.jpg"><h1 class="wrap">List of Scheduled Expenses</h1></a></li>
-	</ul>
-    </div>
-	
-	<!-- footer -->
-	<footer data-role="footer" class="ui-body-c" data-position="fixed">
-		<div data-role="navbar" >
-		<ul>
-		 <li><a href="#deal" data-icon="star" >Deals</a></li>
-		 <li><a href="#message" data-icon="mail" >My Messages</a></li>
-		 <li><a href="https://www.ocbc.com.my" data-icon="arrow-r" data-rel="external" >Go to Website</a></li>
-		</ul>
-		</div>
-	</footer>
-</div>
-<!-- /page -->
-
-<!-- Nearest Branch page -->
-<div data-role="page" id="nearestBr">
-	<div data-role="header" data-position="fixed" data-theme="a">
-		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> OneLife - Nearest Branch</p>
-		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-left">
-            <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelB">Menu</a>
-        </div>
-		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
-            <a data-icon="gear" data-iconpos="notext" data-role="button" href="#settingPage">Settings</a>
-        </div>
-	</div>
-	<!---  Menu ------>
-	<div data-role="panel" id="menuPanelB" data-display="overlay">
-    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" />  OneLife</p> 
-    <ul data-role="listview">
-		<li><a href="#myAccount">My Account</a></li>
-		<li><a href="#mobileCash">Mobile Cash</a></li>
-		<li><a href="#nearestBr" onclick="
-			window.document.getElementById('klmQueue').innerText = noCustKLM.toString();
-			window.document.getElementById('ampQueue').innerText = noCustAMP.toString();">Nearest Branch</a></li>
-		<li><a href="#setupAppointment">Setup Appointment</a></li>
-		<li><a href="#myGoals">My Goals</a></li>
-		<li><a href="#scheduleExpenses">Schedule Expenses</a></li>
-		<li><a href="#manageCard">Manage My Card</a></li>
-		<li><a href="#setupTravel">I am Traveling!</a></li>
-		<li><a data-icon="arrow-r" data-role="button" href="#loginPage">Logout</a></li>
-		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/conditions-of-access.html">Terms of Usage</a></li>
-		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/security-privacy.html">Privacy Policy</a></li>
-    </ul>
-	</div>
-	<!---- Content --->
-    <div role="main" class="ui-content" >
-	<a href="#" class="ui-btn ui-corner-all" onclick="initializeMap();" id="button">Find The Nearest Branch</a>
-	<!--- <p><img src="map.jpg" ></p> -->
-	<div id="map_canvas" style="width:98%;height:200px;" align="center"></div>
-	<p class="pgTitle"><span class="pgTitleRed">NEAREST BRANCH</span> TO YOU NOW IS:</p>
-	<table id="mapTbl" class="travel"><tr>
-		<td width="25%"><span class="brTitle">KL Main</span><br/><span class="font-small"><b>50m away</b></span><br/>
-			<a href="#phoneDial" data-role="button" data-icon="phone" data-iconpos="notext" onclick="window.document.getElementById('phoneNum').innerText = '+603 2034 5148';">Phone</a></td>
-		<td width="50%" class="font-small">
-		<select id="klmService" onchange="
-			if (this.selectedIndex == 0)
-				window.document.getElementById('klmQueue').innerText = noCustKLM;
-			else
-				window.document.getElementById('klmQueue').innerText = noCustKLM2;
-		">
-			<option value="Teller Service">Teller Service</option>
-			<option value="Personal Banking">Personal Banking</option>
-		</select>
-		<div class="brHour"><b>Open</b> (09:30-16:00)</div>
-		<span id="klmQueue">10</span> customers in queue</td>
-		<td width="25%"><a href="#getTicket" class="ui-btn-icon-right" data-role="button" data-icon="tag" 
-		onClick="window.document.getElementById('brName').innerText = 'KL Main';
-		counter = '';
-		if (window.document.getElementById('klmService').selectedIndex == 0){
-			tktKLM = tktKLM + 1;
-			counter = tktKLM.toString();
-			if (counter.length <4) { counter = '0' + tktKLM.toString()};
-			waitTimeKLM = waitTimeKLM + 3;
-			noCustKLM = noCustKLM + 1;
-			window.document.getElementById('klmQueue').innerText = noCustKLM.toString();
-			window.document.getElementById('brMin').innerText = waitTimeKLM.toString() + ' mins';
-		}else{
-			tktKLM2 = tktKLM2 + 1;
-			counter = tktKLM2.toString();
-			if (counter.length <4) { counter = '0' + tktKLM2.toString()};
-			waitTimeKLM2 = waitTimeKLM2 + 15;
-			noCustKLM2 = noCustKLM2 + 1;
-			window.document.getElementById('klmQueue').innerText = noCustKLM2.toString();
-			window.document.getElementById('brMin').innerText = waitTimeKLM2.toString() + ' mins';
-		}
-		window.document.getElementById('ctq1').innerText = counter.substr(0,1);
-		window.document.getElementById('ctq2').innerText = counter.substr(1,1);
-		window.document.getElementById('ctq3').innerText = counter.substr(2,1);
-		window.document.getElementById('ctq4').innerText = counter.substr(3,1);
-		if (window.document.getElementById('msg7').style.display == 'none'){
-			window.document.getElementById('msgBrTitle7').innerText = 'OCBC KL Main - ' + counter;
-			window.document.getElementById('msg7').style.display = 'block';
-		} else if (window.document.getElementById('msg8').style.display == 'none'){ 
-			window.document.getElementById('msgBrTitle8').innerText = 'OCBC KL Main - ' + counter;
-			window.document.getElementById('msg8').style.display = 'block';
-		}">
-		Get<br/>Queue<br/>Ticket</a></td>
-	</tr><tr>
-		<td><span class="brTitle">Jln Ampang</span><br/><span class="font-small"><b>7.4 km away</b></span><br/>
-			<a href="#phoneDial" data-role="button" data-icon="phone" data-iconpos="notext" onclick="window.document.getElementById('phoneNum').innerText = '+603 4264 1850';">Phone</a></td>
-		<td class="font-small">
-		<select id="ampService" onchange="
-			if (this.selectedIndex == 0)
-				window.document.getElementById('ampQueue').innerText = noCustAMP;
-			else
-				window.document.getElementById('ampQueue').innerText = noCustAMP2;
-		">
-			<option value="Teller Service">Teller Service</option>
-			<option value="Personal Banking">Personal Banking</option>
-		</select>
-		<div class="brHour"><b>Open</b> (09:30-16:00)</div>
-		<span id="ampQueue">2</span> customers in queue</td>
-		<td><a href="#getTicket" class="ui-btn-icon-right" data-role="button" data-icon="tag" 
-		onClick="window.document.getElementById('brName').innerText = 'Jln Ampang';
-		counter = '';
-		if (window.document.getElementById('ampService').selectedIndex == 0){
-			tktAMP = tktAMP + 1;
-			counter = tktAMP.toString(); 
-			if (counter.length <4) { counter = '0' + tktAMP.toString()};
-			waitTimeAMP = waitTimeAMP + 3;
-			noCustAMP = noCustAMP + 1;
-			window.document.getElementById('ampQueue').innerText = noCustAMP.toString();
-			window.document.getElementById('brMin').innerText = waitTimeAMP.toString() + ' mins';
-		}else{
-			tktAMP2 = tktAMP2 + 1;
-			counter = tktAMP2.toString();
-			waitTimeAMP2 = waitTimeAMP2 + 15;
-			noCustAMP2 = noCustAMP2 + 1;
-			window.document.getElementById('ampQueue').innerText = noCustAMP2.toString();
-			window.document.getElementById('brMin').innerText = waitTimeAMP2.toString() + ' mins';
-		}
-		window.document.getElementById('queueReminderTxt').innerText = 'Please ensure you will arrive in time at the branch. See you later!';
-		window.document.getElementById('ctq1').innerText = counter.substr(0,1);
-		window.document.getElementById('ctq2').innerText = counter.substr(1,1);
-		window.document.getElementById('ctq3').innerText = counter.substr(2,1);
-		window.document.getElementById('ctq4').innerText = counter.substr(3,1);
-		if (window.document.getElementById('msg7').style.display == 'none'){
-			window.document.getElementById('msgBrTitle7').innerText = 'OCBC Jln Ampang - ' + counter;
-			window.document.getElementById('msg7').style.display = 'block';
-		} else if (window.document.getElementById('msg8').style.display == 'none'){
-			window.document.getElementById('msgBrTitle8').innerText = 'OCBC Jln Ampang - ' + counter;
-			window.document.getElementById('msg8').style.display = 'block'
-		}		">Get<br/>Queue<br/>Ticket</a></td>
-	</tr><tr>
-	<td colspan=3 style="text-align:right;padding-top:3px"><a href="#allBranches">See all branches >></a></td>
-	</tr>
-	</table>
-	
-    </div>
-	<!-- footer -->
-	<footer data-role="footer" class="ui-body-c" data-position="fixed">
-		<div data-role="navbar" >
-		<ul>
-		 <li><a href="#deal" data-icon="star" >Deals</a></li>
-		 <li><a href="#message" data-icon="mail" >My Messages</a></li>
-		 <li><a href="https://www.ocbc.com.my" data-icon="arrow-r" data-rel="external" >Go to Website</a></li>
-		</ul>
-		</div>
-	</footer>
-</div>
-<!-- /page -->
-
-<!-- Appointment Setup page -->
-<div data-role="page" id="setupAppointment">
-	<div data-role="header" data-position="fixed" data-theme="a">
-		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> OneLife - Setup Appointment</p>
-		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-left">
-            <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelAp">Menu</a>
-        </div>
-		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
-            <a data-icon="gear" data-iconpos="notext" data-role="button" href="#settingPage">Settings</a>
-        </div>
-	</div>
-	<!---  Menu ------>
-	<div data-role="panel" id="menuPanelAp" data-display="overlay">
-    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" />  OneLife</p> 
-    <ul data-role="listview">
-		<li><a href="#myAccount">My Account</a></li>
-		<li><a href="#mobileCash">Mobile Cash</a></li>
-		<li><a href="#nearestBr" onclick="
-			window.document.getElementById('klmQueue').innerText = noCustKLM.toString();
-			window.document.getElementById('ampQueue').innerText = noCustAMP.toString();">Nearest Branch</a></li>
-		<li><a href="#setupAppointment">Setup Appointment</a></li>
-		<li><a href="#myGoals">My Goals</a></li>
-		<li><a href="#scheduleExpenses">Schedule Expenses</a></li>
-		<li><a href="#manageCard">Manage My Card</a></li>
-		<li><a href="#setupTravel">I am Traveling!</a></li>
-		<li><a data-icon="arrow-r" data-role="button" href="#loginPage">Logout</a></li>
-		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/conditions-of-access.html">Terms of Usage</a></li>
-		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/security-privacy.html">Privacy Policy</a></li>
-    </ul>
-	</div>
-	<!---- Content --->
-    <div role="main" class="ui-content">
-	<!-- <a href="#" class="ui-btn ui-corner-all blue">Make An Appointment</a> -->
-	<p class="pgTitle"><span class="pgTitleRed">BOOK A DATE</span> TO DISCUSS:</p>
-	<table id="apptTbl" class="travel"><tr>
-		<td width="10%"><input type="checkbox" id="box1" /> </td>
-		<td width="15%" style="text-align:center"><img src="img/everydayBanking.png" width="40" height="40" /></td>
-		<td width="20%">Everyday Banking</td>
-		<td width="55%" class="font-small">
-			<ul><li>Saving & Rates</li><li>Personal Loan</li><li>Cards & Security</li><li>Rewards & Treats</li></ul></td>
-	</tr><tr>
-		<td ><input type="checkbox" id="box2" /></td>
-		<td style="text-align:center"><img src="img/investment.png" width="40" height="40" /></td>
-		<td>Investment & Wealth Planning</td>
-		<td class="font-small">
-			<ul><li>Retirement</li><li>Child Education</li><li>Health & Protection</li><li>Wealth Transfer</li></ul></td>
-	</tr><tr>
-		<td><input type="checkbox" id="box3" /></td>
-		<td style="text-align:center"><img src="img/businessBanking.png" width="40" height="40" /></td>
-		<td>Business Banking</td>
-		<td class="font-small">
-			<ul><li>SME Loan</li><li>Business Loan</li><li>Trade Financing</li><li>Corporate Insurance</li></ul></td>
-	</tr>
-	</table>
-	
-	<p class="pgTitle"><span class="pgTitleRed">I AM AVAILABLE</span> TO DISCUSS ON:</p>
-	<table id="apptTbl2" class="travel"><tr>
-			<td width="50%">Date <input id="dtAppt" type="date" value="2017-11-24"></td>
-			<td width="50%">Time <input id="timeAppt" type="time" value="10:00:00"></td>
-	</tr>
-	</table> 
-	<a data-rel="popup" href="#" class="ui-btn ui-corner-all blue" data-position-to="window" onclick="window.document.getElementById('saveAppt').style.display = 'block';">Save</a>
-	
-	<div id="saveAppt" class="ui-corner-all" style="display:none;position: absolute; z-index:2; top:250px; left:10px; width:85%; background-color:lightGray; padding:15px; text-align:center;font-weight:bold">Appointment saved. Our relationship manager will be contacting you soon!
-		<a data-role="button" href="#" class="ui-btn ui-corner-all" onclick="
-			window.document.getElementById('saveAppt').style.display = 'none';
-		">OK</a>
-		</div>
-    </div>
-
-	<!-- footer -->
-	<footer data-role="footer" class="ui-body-c" data-position="fixed">
-		<div data-role="navbar" >
-		<ul>
-		 <li><a href="#deal" data-icon="star" >Deals</a></li>
-		 <li><a href="#message" data-icon="mail" >My Messages</a></li>
-		 <li><a href="https://www.ocbc.com.my" data-icon="arrow-r" data-rel="external" >Go to Website</a></li>
-		</ul>
-		</div>
-	</footer>
-</div>
-<!-- /page -->
-
-<!-- Manage My Card page -->
-<div data-role="page" id="manageCard">
-	<div data-role="header" data-position="fixed" data-theme="a">
-		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> OneLife - Manage My Card</p>
-		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-left">
-            <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelMC">Menu</a>
-        </div>
-		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
-            <a data-icon="gear" data-iconpos="notext" data-role="button" href="#settingPage">Settings</a>
-        </div>
-	</div>
-	<!---  Menu ------>
-	<div data-role="panel" id="menuPanelMC" data-display="overlay">
-    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" /> OneLife</p> 
-    <ul data-role="listview">
-		<li><a href="#myAccount">My Account</a></li>
-		<li><a href="#mobileCash">Mobile Cash</a></li>
-		<li><a href="#nearestBr" onclick="
-			window.document.getElementById('klmQueue').innerText = noCustKLM.toString();
-			window.document.getElementById('ampQueue').innerText = noCustAMP.toString();">Nearest Branch</a></li>
-		<li><a href="#setupAppointment">Setup Appointment</a></li>
-		<li><a href="#myGoals">My Goals</a></li>
-		<li><a href="#scheduleExpenses">Schedule Expenses</a></li>
-		<li><a href="#manageCard">Manage My Card</a></li>
-		<li><a href="#setupTravel">I am Traveling!</a></li>
-		<li><a data-icon="arrow-r" data-role="button" href="#loginPage">Logout</a></li>
-		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/conditions-of-access.html">Terms of Usage</a></li>
-		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/security-privacy.html">Privacy Policy</a></li>
-    </ul>
-	</div>
-	<!---- Content --->
-    <div role="main" class="ui-content">
-		<p class="pgTitle"><span class="pgTitleRed">ALLOW MY DEBIT CARD</span> FOR:</p>
-		<table id="card1" class="travel" cellpadding=0 cellspacing=0>
-		<tr>
-			<td width="15%"><img src="img/onlineTrxn.jpg" ></td>
-			<td width="55%">Online Transactions</td>
-			<td width="20%">
-			<select id="flipC1" name="flipC1" data-role="slider">
-		        <option value="off">Off</option>
-		        <option value="on">On</option>
-		    </select>
-			</td>
-		</tr><tr>
-			<td><img src="img/contactless.png" ></td>
-			<td>Contactless Payment</td>
-			<td>
-			<select id="flipC2" name="flipC2" data-role="slider">
-		        <option value="off">Off</option>
-		        <option value="on" selected>On</option>
-		    </select>
-			</td>
-		</tr>
-		</table>
-		
-		<p class="pgTitle"><span class="pgTitleRed">ALLOW MY CREDIT CARD</span> FOR:</p>
-		<select id="creditCard" onchange="if (this.selectedIndex == 0){
-			window.document.getElementById('card2').style.display = 'block';
-			window.document.getElementById('card3').style.display = 'none';
-		}else{
-			window.document.getElementById('card2').style.display = 'none';
-			window.document.getElementById('card3').style.display = 'block';
-		}
-		">
-			<option value="5595XXXXXXXX8888">World Mastercard - Card Ending 8888</option>
-			<option value="5120XXXXXXXX1234">365 Mastercard - Card Ending 1234</option>
-		</select>
-		<table id="card2" class="travel" cellpadding=0 cellspacing=0 style="display:block">
-		<tr>
-			<td width="15%"><img src="img/onlineTrxn.jpg" ></td>
-			<td width="55%">Online Transactions</td>
-			<td width="20%">
-			<select id="flipCC1" data-role="slider">
-		        <option value="off">Off</option>
-		        <option value="on" selected>On</option>
-		    </select>
-			</td>
-		</tr><tr>
-			<td><img src="img/contactless.png" ></td>
-			<td>Contactless Payment</td>
-			<td>
-			<select id="flipCC2" data-role="slider">
-		        <option value="off">Off</option>
-		        <option value="on">On</option>
-		    </select>
-			</td>
-		</tr><tr>
-			<td><img src="img/atm.jpg" ></td>
-			<td>ATM Cash Advances</td>
-			<td>
-			<select id="flipCC3" data-role="slider">
-		        <option value="off">Off</option>
-		        <option value="on">On</option>
-		    </select>
-			</td>
-		</tr><tr>
-			<td><img src="img/limit.png" ></td>
-			<td>Change Spending Limit (MYR)</td>
-			<td><input type="text" id="ccLimit2" value="30000">
-			</td>
-		</tr>
-		</table>
-		<table id="card3" class="travel" cellpadding=0 cellspacing=0 style="display:none">
-		<tr>
-			<td width="15%"><img src="img/onlineTrxn.jpg" ></td>
-			<td width="55%">Online Transactions</td>
-			<td width="20%">
-			<select id="flipCC4" data-role="slider">
-		        <option value="off">Off</option>
-		        <option value="on" selected>On</option>
-		    </select>
-			</td>
-		</tr><tr>
-			<td><img src="img/contactless.png" ></td>
-			<td>Contactless Payment</td>
-			<td>
-			<select id="flipCC5" data-role="slider">
-		        <option value="off">Off</option>
-		        <option value="on">On</option>
-		    </select>
-			</td>
-		</tr><tr>
-			<td><img src="img/atm.jpg" ></td>
-			<td>ATM Cash Advances</td>
-			<td>
-			<select id="flipCC6" data-role="slider">
-		        <option value="off">Off</option>
-		        <option value="on" selected>On</option>
-		    </select>
-			</td>
-		</tr><tr>
-			<td><img src="img/limit.png" ></td>
-			<td>Change Spending Limit (MYR)</td>
-			<td><input type="text" id="ccLimit3" value="20000">
-			</td>
-		</tr>
-		</table>
-		<a data-rel="popup" data-role="button" href="#saveCard" class="ui-btn ui-corner-all" onclick="
-			card = window.document.getElementById('creditCard').selectedIndex;
-			limit = window.document.getElementById('ccLimit2').value;
-			limit2 = window.document.getElementById('ccLimit3').value;
-			window.document.getElementById('saveCardTxt').innerText = 'Your card preferences have been saved successfully.';
-			if (limit == ''){
-				window.document.getElementById('saveCardTxt').innerText = 'Please enter a valid limit for your credit card.';
-			}else if (parseInt(limit) != cWorldlimit || parseInt(limit2) != c365limit){
-				window.document.getElementById('saveCardTxt').innerText = 'Your card preferences have been saved successfully, and the limit adjustment has been approved. Happy shopping!';
-				cWorldlimit = parseInt(limit);
-				c365limit = parseInt(limit2);
-			}
-			window.document.getElementById('saveCard').style.display = 'block';
-		">Save</a>
-		<div id="saveCard" class="ui-corner-all" style="display:none; position:absolute; z-index:2; top:250px; left:10px; width:85%; background-color:lightGray; padding:15px; text-align:center;font-weight:bold"><span id="saveCardTxt">Your card preferences have been saved successfully.</span>
-		<a data-role="button" href="#" class="ui-btn ui-corner-all" onclick="
-			window.document.getElementById('saveCard').style.display = 'none';
-		">OK</a>
-		</div>
-    </div>
-	
-	<!-- footer -->
-	<footer data-role="footer" class="ui-body-c" data-position="fixed">
-		<div data-role="navbar" >
-		<ul>
-		 <li><a href="#deal" data-icon="star" >Deals</a></li>
-		 <li><a href="#message" data-icon="mail" >My Messages</a></li>
-		 <li><a href="https://www.ocbc.com.my" data-icon="arrow-r" data-rel="external" >Go to Website</a></li>
-		</ul>
-		</div>
-	</footer>
-</div>
-<!-- /page -->
-
-<!-- Traveling Setup page -->
-<div data-role="page" id="setupTravel">
-	<div data-role="header" data-position="fixed" data-theme="a">
-		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> OneLife - I am Traveling!</p>
-		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-left">
-            <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelT">Menu</a>
-        </div>
-		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
-            <a data-icon="gear" data-iconpos="notext" data-role="button" href="#settingPage">Settings</a>
-        </div>
-	</div>
-	<!---  Menu ------>
-	<div data-role="panel" id="menuPanelT" data-display="overlay">
-    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" /> OneLife</p> 
-    <ul data-role="listview">
-		<li><a href="#myAccount">My Account</a></li>
-		<li><a href="#mobileCash">Mobile Cash</a></li>
-		<li><a href="#nearestBr" onclick="
-			window.document.getElementById('klmQueue').innerText = noCustKLM.toString();
-			window.document.getElementById('ampQueue').innerText = noCustAMP.toString();">Nearest Branch</a></li>
-		<li><a href="#setupAppointment">Setup Appointment</a></li>
-		<li><a href="#myGoals">My Goals</a></li>
-		<li><a href="#scheduleExpenses">Schedule Expenses</a></li>
-		<li><a href="#manageCard">Manage My Card</a></li>
-		<li><a href="#setupTravel">I am Traveling!</a></li>
-		<li><a data-icon="arrow-r" data-role="button" href="#loginPage">Logout</a></li>
-		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/conditions-of-access.html">Terms of Usage</a></li>
-		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/security-privacy.html">Privacy Policy</a></li>
-    </ul>
-	</div>
-	<!---- Content --->
-    <div role="main" class="ui-content">
-		<!--<a href="#" class="ui-btn ui-corner-all blue">Overseas Travel</a>-->
-		<img src="img/traveling.jpg" width="320" height="60" />
-		<p class="pgTitle"><span class="pgTitleRed">I WILL BE GOING</span> OVERSEAS:</p>
-		<table id="travel1" class="travel"><tr>
-			<td width="30%">Country</td><td width="70%"><select id="country" width="100%">
-			<option value="AU">Australia</option>
-			<option value="CN">China</option>
-			<option value="DN">Denmark</option>
-			<option value="HK">Hong Kong</option>
-			<option value="IN">India</option>
-			<option value="ID">Indonesia</option>
-			<option value="JP">Japan</option>
-			<option value="KR">Korea</option>
-			<option value="NZ">New Zealand</option>
-			<option value="PH">Philippines</option>
-			<option value="SG">Singapore</option>
-			<option value="TH">Thailand</option>
-			<option value="UK">United Kingdom</option>
-			<option value="US">United States</option>
-			<option value="VN">Vietnam</option>
-			</select></td>
-		</tr></table>
-		<table id="travel2" class="travel" width="90%"><tr>
-			<td width="50%">From <input id="dtFrom" type="date" ></td>
-			<td width="50%">To <input id="dtTo" type="date" ></td>
-		</tr></table> 
-		
-		<p class="pgTitle"><span class="pgTitleRed">IN CASE</span> WE NEED TO CONTACT YOU:</p>
-		<p class="font-small" style="vertical-align:center">
-		<input id="mobile" type="text" width="50" style="background-image:url(img/phone_icon.png);
-				background-repeat:no-repeat; background-position:6px;padding-left:40px;" value="+60126515150"> </p> 
-		
-		<p class="pgTitle"><span class="pgTitleRed">WHILE I AM</span> OVERSEAS:</p>
-		<table id="msgHeader" class="travel">
-		<tr>
-			<td width="70%">I will be Using My Debit Card</td>
-			<td width="20%">
-			<select id="flipT1" name="flipT1" data-role="slider">
-		        <option value="off">Off</option>
-		        <option value="on">On</option>
-		    </select>
-			</td>
-		</tr><tr>
-			<td width="70%">I will be Using My Credit Card</td>
-			<td width="20%">
-			<select id="flipT2" name="flipT2" data-role="slider">
-		        <option value="off">Off</option>
-		        <option value="on">On</option>
-		    </select>
-			</td>
-		</tr>
-		</table>
-		<a data-rel="popup" data-role="button" href="#saveTravel" class="ui-btn ui-corner-all" onclick="
-			if (window.document.getElementById('dtFrom').value == '' || window.document.getElementById('dtTo').value == ''){
-				window.document.getElementById('saveTravelMsg').innerHTML = 'Please complete the dates before you save & submit.';
-			}else{
-				window.document.getElementById('saveTravelMsg').innerHTML = 'Your travel itinerary and preferences have been saved.<br/>Have a safe journey!';
-			}
-			window.document.getElementById('saveTravel').style.display = 'block';
-		">Save</a>
-		<div id="saveTravel" class="ui-corner-all" style="display:none;position: absolute; top:250px; left:10px; width:85%; background-color:lightGray; padding:15px; text-align:center;font-weight:bold"><span id="saveTravelMsg">Your travel itinerary and preferences have been saved.<br/>Have a safe journey!</span>
-		<a data-role="button" href="#" class="ui-btn ui-corner-all" onclick="
-			window.document.getElementById('saveTravel').style.display = 'none';
-		">OK</a>
-		</div>
-    </div>
-	
-	<!-- footer -->
-	<footer data-role="footer" class="ui-body-c" data-position="fixed">
-		<div data-role="navbar" >
-		<ul>
-		 <li><a href="#deal" data-icon="star" >Deals</a></li>
-		 <li><a href="#message" data-icon="mail" >My Messages</a></li>
-		 <li><a href="https://www.ocbc.com.my" data-icon="arrow-r" data-rel="external" >Go to Website</a></li>
-		</ul>
-		</div>
-	</footer>
-</div>
-<!-- /page -->
-
 <!-- Deal page -->
 <div data-role="page" id="deal">
 	<div data-role="header" data-position="fixed" data-theme="a">
-		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> OneLife - Deals</p>
+		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> Swing - Deals</p>
 		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-left">
             <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelD">Menu</a>
         </div>
@@ -1567,18 +1130,12 @@ function calcAmt(){
 	</div>
 	<!---  Menu ------>
 	<div data-role="panel" id="menuPanelD" data-display="overlay">
-    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" />  OneLife</p> 
+    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" />  Swing</p> 
     <ul data-role="listview">
 		<li><a href="#myAccount">My Account</a></li>
-		<li><a href="#mobileCash">Mobile Cash</a></li>
-		<li><a href="#nearestBr" onclick="
-			window.document.getElementById('klmQueue').innerText = noCustKLM.toString();
-			window.document.getElementById('ampQueue').innerText = noCustAMP.toString();">Nearest Branch</a></li>
-		<li><a href="#setupAppointment">Setup Appointment</a></li>
-		<li><a href="#myGoals">My Goals</a></li>
-		<li><a href="#scheduleExpenses">Schedule Expenses</a></li>
-		<li><a href="#manageCard">Manage My Card</a></li>
-		<li><a href="#setupTravel">I am Traveling!</a></li>
+		<li><a href="#mobileWallet">Mobile Wallet</a></li>
+		<li><a href="#fundTransfer">Instant Transfer</a></li>
+		<li><a href="#myApplication">My Applications</a></li>
 		<li><a data-icon="arrow-r" data-role="button" href="#loginPage">Logout</a></li>
 		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/conditions-of-access.html">Terms of Usage</a></li>
 		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/security-privacy.html">Privacy Policy</a></li>
@@ -1629,7 +1186,7 @@ function calcAmt(){
 <!-- MyMessage page -->
 <div data-role="page" id="message">
 	<div data-role="header" data-position="fixed" data-theme="a">
-		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> OneLife - My Messages</p>
+		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> Swing - My Messages</p>
 		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-left">
             <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelM">Menu</a>
         </div>
@@ -1639,18 +1196,12 @@ function calcAmt(){
 	</div>
 	<!---  Menu ------>
 	<div data-role="panel" id="menuPanelM" data-display="overlay">
-    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" />  OneLife</p> 
+    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" />  Swing</p> 
     <ul data-role="listview">
 		<li><a href="#myAccount">My Account</a></li>
-		<li><a href="#mobileCash">Mobile Cash</a></li>
-		<li><a href="#nearestBr" onclick="
-			window.document.getElementById('klmQueue').innerText = noCustKLM.toString();
-			window.document.getElementById('ampQueue').innerText = noCustAMP.toString();">Nearest Branch</a></li>
-		<li><a href="#setupAppointment">Setup Appointment</a></li>
-		<li><a href="#myGoals">My Goals</a></li>
-		<li><a href="#scheduleExpenses">Schedule Expenses</a></li>
-		<li><a href="#manageCard">Manage My Card</a></li>
-		<li><a href="#setupTravel">I am Traveling!</a></li>
+		<li><a href="#mobileWallet">Mobile Wallet</a></li>
+		<li><a href="#fundTransfer">Instant Transfer</a></li>
+		<li><a href="#myApplication">My Applications</a></li>
 		<li><a data-icon="arrow-r" data-role="button" href="#loginPage">Logout</a></li>
 		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/conditions-of-access.html">Terms of Usage</a></li>
 		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/security-privacy.html">Privacy Policy</a></li>
@@ -1738,7 +1289,7 @@ function calcAmt(){
 <!-- Setting Page -->
 <div data-role="page" id="settingPage">
 	<div data-role="header" data-position="fixed" data-theme="a">
-		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> OneLife - Settings</p>
+		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> Swing - Settings</p>
 		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-left">
             <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelS">Menu</a>
         </div>
@@ -1748,18 +1299,12 @@ function calcAmt(){
 	</div>
 	<!---  Menu ------>
 	<div data-role="panel" id="menuPanelS" data-display="overlay">
-    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" />  OneLife </p>
+    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" />  Swing </p>
     <ul data-role="listview">
 		<li><a href="#myAccount">My Account</a></li>
-		<li><a href="#mobileCash">Mobile Cash</a></li>
-		<li><a href="#nearestBr" onclick="
-			window.document.getElementById('klmQueue').innerText = noCustKLM.toString();
-			window.document.getElementById('ampQueue').innerText = noCustAMP.toString();">Nearest Branch</a></li>
-		<li><a href="#setupAppointment">Setup Appointment</a></li>
-		<li><a href="#myGoals">My Goals</a></li>
-		<li><a href="#scheduleExpenses">Schedule Expenses</a></li>
-		<li><a href="#manageCard">Manage My Card</a></li>
-		<li><a href="#setupTravel">I am Traveling!</a></li>
+		<li><a href="#mobileWallet">Mobile Wallet</a></li>
+		<li><a href="#fundTransfer">Instant Transfer</a></li>
+		<li><a href="#myApplication">My Applications</a></li>
 		<li><a data-icon="arrow-r" data-role="button" href="#loginPage">Logout</a></li>
 		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/conditions-of-access.html">Terms of Usage</a></li>
 		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/security-privacy.html">Privacy Policy</a></li>
@@ -1807,6 +1352,20 @@ function calcAmt(){
 	</footer>
 </div>
 <!-- /page -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <!-- Phone Dialing Page -->
 <div data-role="page" id="phoneDial" data-theme="a"  style="background-color:black">
