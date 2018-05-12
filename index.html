@@ -350,13 +350,12 @@ function yearsToMonths(year,frequency) {
 	<!-- for QR Code scanner -->
 	<input type="button" id="camera" value="Capture QR Code" onclick="
 	// capture callback
-	alert('start');
 	var captureSuccess = function(mediaFiles) {
 		var i, path, len;
 		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
 			path = mediaFiles[i].fullPath;
 			document.getElementById('qrResult').src = path;
-			alert(qrCount);
+
 			if (qrCount != 2){
 				document.getElementById('qrMerchant').innerText = 'Apple Malaysia Sdn Bhd';
 				document.getElementById('qrDesc').innerText = 'iMac Pro';
@@ -379,7 +378,6 @@ function yearsToMonths(year,frequency) {
 	var captureError = function(error) {
 		navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
 	};
-	alert('aaa');
 	// start image capture
 	navigator.device.capture.captureImage(captureSuccess, captureError, {limit:1});
 	">
@@ -401,7 +399,6 @@ function yearsToMonths(year,frequency) {
 		</table>
 		<a data-role="button" href="#mobileWalletOptions" class="ui-btn ui-corner-all" onclick="showLoading();">Proceed To Pay</a>
 	</p>
-	<img src="img/loading.gif" width="200" height="200" id="loading" style="display:block; z-index:1; margin-top:155pt; margin-left:45pt" />
 	</div>
 	
 	<!-- footer -->
@@ -867,7 +864,7 @@ function yearsToMonths(year,frequency) {
 			var captureSuccess = function(mediaFiles) {
 				var i, path, len;
 				for (i = 0, len = mediaFiles.length; i < len; i += 1) {
-					path = mediaFiles[i].fullPath;
+					path = mediaFiles[i].name;
 					document.getElementById('doc1Path').innerText = path;
 				}
 			};
@@ -888,7 +885,7 @@ function yearsToMonths(year,frequency) {
 			var captureSuccess = function(mediaFiles) {
 				var i, path, len;
 				for (i = 0, len = mediaFiles.length; i < len; i += 1) {
-					path = mediaFiles[i].fullPath;
+					path = mediaFiles[i].name;
 					document.getElementById('doc2Path').innerText = path;
 				}
 			};
