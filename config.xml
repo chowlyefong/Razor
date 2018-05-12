@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
     <widget xmlns = "http://www.w3.org/ns/widgets" id = "org.chowlyefong" versionCode = "1" version = "1.0.0" >
-    <name>Razor</name>
+    <name>Swing</name>
 
     <description>
-        Razor app for 2018 Digithon Challenge. Developed by Chow Lye Fong
+        Swing app for 2018 Digithon Challenge. Developed by Chow Lye Fong
     </description>
 
     <author href="https://my.linkedin.com/in/chowlyefong" email="chowlyefong@yahoo.com">
