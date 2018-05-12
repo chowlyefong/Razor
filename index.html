@@ -20,6 +20,8 @@
  //goal chart
  var target = 25000;
  var saved = 13000;
+ //QR counter
+ var qrCount = 1;
  //schedule Exp List item
  var liID = 1;
  var liID2 = 1;
@@ -126,7 +128,7 @@ function calcAmt(){
 <body onload="initializeMap();">
 <!--<img src="img/loading.gif" width="200" height="200" style="display:block; z-index:2; margin-top:155pt; margin-left:45pt" />  -->
 <!-- Login Page -->
-<div data-role="page" id="loginPage" data-title="OCBC Razor by Move'm">
+<div data-role="page" id="loginPage" data-title="OCBC Swing by Move'm">
 	<div data-role="header" data-position="fixed" data-theme="a" font-size="9pt">
 		<h5>Welcome</h5>
 	</div>
@@ -135,7 +137,8 @@ function calcAmt(){
 		<p align="center"><a href="#" onclick="document.body.requestFullscreen(); if (!document.fullscreenElement){
 				document.body.requestFullscreen();
 			}else{	document.exitFullscreen(); }"><img src="img/ocbc.png" width="200" height="43" /></a></p>
-		<p class="title">OCBC Razor<br/><br/><br/></p>
+		<!--<p class="title">OCBC Swing<br/><br/><br/></p> -->
+		<p align="center"><br/><br/><img src="img/swing.png"  /><br/><br/></p>
 	
         <p align="center">Login with Biometric:<br/>
 			<a href="#myAccount" onClick="
@@ -203,7 +206,7 @@ function calcAmt(){
 <!-- MyAccount page -->
 <div data-role="page" id="myAccount">
 	<div data-role="header" data-position="fixed" data-theme="a">
-		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> Razor - My Account</p>
+		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> Swing - My Account</p>
 		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-left">
             <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelA">Menu</a>
         </div>
@@ -213,7 +216,7 @@ function calcAmt(){
 	</div>
 	<!---  Menu ------>
 	<div data-role="panel" id="menuPanelA" data-display="overlay">
-    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" />  Razor</p> 
+    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" />  Swing</p> 
     <ul data-role="listview">
 		<li><a href="#myAccount">My Account</a></li>
 		<li><a href="#mobileWallet">Mobile Wallet</a></li>
@@ -296,17 +299,17 @@ function calcAmt(){
 <!-- Mobile Wallet QR Page -->
 <div data-role="page" id="mobileWallet">
 	<div data-role="header" data-position="fixed" data-theme="a">
-		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> Razor - Mobile Wallet</p>
+		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> Swing - Mobile Wallet</p>
 		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-left">
-            <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelC">Menu</a>
+            <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelQR">Menu</a>
         </div>
 		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
             <a data-icon="gear" data-iconpos="notext" data-role="button" href="#settingPage">Settings</a>
         </div>
 	</div>
 	<!---  Menu ------>
-	<div data-role="panel" id="menuPanelC" data-display="overlay">
-    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" /> Razor</p> 
+	<div data-role="panel" id="menuPanelQR" data-display="overlay">
+    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" /> Swing</p> 
     <ul data-role="listview">
 		<li><a href="#myAccount">My Account</a></li>
 		<li><a href="#mobileWallet">Mobile Wallet</a></li>
@@ -328,11 +331,22 @@ function calcAmt(){
 		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
 			path = mediaFiles[i].fullPath;
 			document.getElementById('qrResult').src = path;
-
+			
+			if (qrCount != 2){
+				document.getElementById('qrMerchant').innerText = 'Apple Malaysia Sdn Bhd';
+				document.getElementById('qrDesc').innerText = 'iMac Pro';
+				document.getElementById('qrCurrency').innerText = 'MYR';
+				document.getElementById('qrAmount').innerText = '19,319';
+				qrCount = qrCount + 1;
+			}else{
+				document.getElementById('qrMerchant').innerText = 'Sunway Property';
+				document.getElementById('qrDesc').innerText = 'Sunway Geo Residences 2';
+				document.getElementById('qrCurrency').innerText = 'MYR';
+				document.getElementById('qrAmount').innerText = '650,000';
+				document.getElementById('liIPP;).style.display = 'none';
+				qrCount = 1;
+			};
 			document.getElementById('qrResultFld').style.display = 'block';
-			document.getElementById('qrMerchant').innerText = 'Apple Malaysia Sdn Bhd';
-			document.getElementById('qrCurrency').innerText = 'MYR';
-			document.getElementById('qrAmount').innerText = '19319';
 		}
 	};
 
@@ -352,6 +366,9 @@ function calcAmt(){
 		<tr>
 			<td width="40%"><b>Merchant:</b></td>
 			<td width="60%" style="text-align:left"><span id="qrMerchant" class="titleGreen"></span></td>
+		</tr><tr>
+			<td><b>Item Description:</b></td>
+			<td><span id="qrDesc" class="titleGreen"></span></td>
 		</tr><tr>
 			<td><b>Amount To Pay:</b></td>
 			<td><span id="qrCurrency" class="titleGreen"></span>&nbsp;&nbsp;<span id="qrAmount" class="titleGreen"></span></td>
@@ -375,121 +392,20 @@ function calcAmt(){
 </div>
 <!-- /page -->
 
-<!-- Fund Transfer page -->
-<div data-role="page" id="fundTransfer">
-	<div data-role="header" data-position="fixed" data-theme="a">
-		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> Razor - Instant Transfer</p>
-		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-left">
-            <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelG">Menu</a>
-        </div>
-		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
-            <a data-icon="gear" data-iconpos="notext" data-role="button" href="#settingPage">Settings</a>
-        </div>
-	</div>
-	<!---  Menu ------>
-	<div data-role="panel" id="menuPanelG" data-display="overlay">
-    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" /> Razor</p> 
-    <ul data-role="listview">
-		<li><a href="#myAccount">My Account</a></li>
-		<li><a href="#mobileWallet">Mobile Wallet</a></li>
-		<li><a href="#fundTransfer">Instant Transfer</a></li>
-		<li><a href="#myApplication">My Applications</a></li>
-		<li><a data-icon="arrow-r" data-role="button" href="#loginPage">Logout</a></li>
-		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/conditions-of-access.html">Terms of Usage</a></li>
-		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/security-privacy.html">Privacy Policy</a></li>
-    </ul>
-	</div>
-	<!---- Content --->
-    <div role="main" class="ui-content">
-	<p class="pgTitle"><span class="pgTitleRed">INSTANT</span> TRANSFER:</p>
-	<table id="transferTbl" class="travel" style="width:100%"  cellspacing=0 cellpadding=0>
-		<tr>
-			<td width="40%"><b>Transfer Type:</b></td>
-			<td width="60%" style="text-align:left"><div class="flipSwitch">
-			<select id="flip1" name="flip1" data-role="slider">
-					<option value="International">International</option>
-					<option value="Domestic" selected>Domestic</option>
-			</select></div></td>
-		</tr><tr>
-			<td><b>Currency:</b></td>
-			<td><select id="transferCur">
-				<option value="MYR" selected>MYR</option><option value="SGD">SGD</option><option value="USD">USD</option><option value="EUR">EUR</option>
-				<option value="JPY">JPY</option><option value="GBP">GBP</option><option value="AUD">AUD</option><option value="CHF">CHF</option><option value="CAD">CAD</option>
-				<option value="HKD">HKD</option><option value="CNY">CNY</option><option value="NZD">NZD</option><option value="INR">INR</option><option value="IDR">IDR</option>
-				</select></td>
-		</tr><tr>
-			<td><b>Amount:</b></td>
-			<td><input id="transferAmt" type="text"></td>
-		</tr><tr>
-			<td><b>Recipient Mobile:</b></td>
-			<td><input id="recipientMobile" type="text" alt="Please include country code" value="+"></td>
-		</tr><tr>
-			<td><b></b></td>
-			<td>(Please include country code)</td>
-		</tr>
-	</table>
-	
-	<p align="left" class="font-small-i-b"><br/><br/><br/>Terms & Conditions:</p>
-	<p align="left" >
-		<ol class="font-small-i-b">
-		<li>When forex is involved, Telegraphic Transfer (TT) rates will be used</li>
-		<li>Transfer will be instant with account balance reflected immediately</li>
-		<li>No capped limit on amount allowable for transfer</li>
-		<li>Net service charge per transfer is as below:</li>
-		</ol>
-		<ul class="font-small-i-b" style="margin-left:10pt">
-			<li>For amount less than MYR 30,000 equivalent: MYR 0.05 per transfer including GST</li>
-			<li>For amount more than MYR 30,000 equivalent: MYR 3.00 per transfer including GST</li>
-		</ul>
-	</p>
-
-	<a data-role="button" href="#" class="ui-btn ui-corner-all" onclick="
-		if (window.document.getElementById('transferAmt').value == '' || window.document.getElementById('recipientMobile').value == ''){
-			window.document.getElementById('saveTransfer').innerText = 'Please fill up all the fields to initiate transfer';
-		}else{
-			mob = window.document.getElementById('recipientMobile').value;
-			if (mob.length < 8){
-				window.document.getElementById('saveTransfer').innerText = 'Invalid mobile number to initiate transfer. Please enter valid Recipient Mobile with country code';
-			}else{
-				//add codes deduct account balance
-				window.document.getElementById('saveTransfer').innerText = 'Your transfer has been successful';
-			}			
-		};
-		window.document.getElementById('startTransfer').style.display = '';">Transfer Now</a>
-	<div id="startTransfer" class="ui-corner-all" style="display:none;position: absolute; z-index:3; top:250px; left:10px; width:85%; background-color:lightGray; padding:15px; text-align:center;font-weight:bold"><span id="saveTransfer">Your transfer has been successful.</span>
-		<a data-role="button" href="#" class="ui-btn ui-corner-all" onclick="
-			window.document.getElementById('startTransfer').style.display = 'none';
-		">OK</a>
-	</div>
-    </div>
-	
-	<!-- footer -->
-	<footer data-role="footer" class="ui-body-c" data-position="fixed">
-		<div data-role="navbar" >
-		<ul>
-		 <li><a href="#deal" data-icon="star" >Deals</a></li>
-		 <li><a href="#message" data-icon="mail" >My Messages</a></li>
-		 <li><a href="https://www.ocbc.com.my" data-icon="arrow-r" data-rel="external" >Go to Website</a></li>
-		</ul>
-		</div>
-	</footer>
-</div>
-<!-- /page -->
-
 <!-- Mobile Wallet Selection page -->
 <div data-role="page" id="mobileWalletOptions">
 	<div data-role="header" data-position="fixed" data-theme="a">
-		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> Razor - Mobile Wallet</p>
+		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> Swing - Mobile Wallet</p>
 		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-left">
-            <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelC">Menu</a>
+            <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelWS">Menu</a>
         </div>
 		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
             <a data-icon="gear" data-iconpos="notext" data-role="button" href="#settingPage">Settings</a>
         </div>
 	</div>
 	<!---  Menu ------>
-	<div data-role="panel" id="menuPanelC" data-display="overlay">
-    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" /> Razor</p> 
+	<div data-role="panel" id="menuPanelWS" data-display="overlay">
+    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" /> Swing</p> 
     <ul data-role="listview">
 		<li><a href="#myAccount">My Account</a></li>
 		<li><a href="#mobileWallet">Mobile Wallet</a></li>
@@ -510,7 +426,7 @@ function calcAmt(){
 		<h2>Pay from CASA</h2>
 		<p class="wrap" style="font-size:8pt">Combine amount from one or more local CASA accounts</p></a>
 		</li>
-		<li><a href="#mobileWalletIPP">
+		<li id="liIPP" style="display:block"><a href="#mobileWalletIPP">
 			<img src="img/epp.jpg">
 		<h2>Easy Payment Plan</h2>
 		<p class="wrap" style="font-size:8pt">Flexible & affordable installments for your purchase up to MYR 50,000</p></a>
@@ -518,7 +434,7 @@ function calcAmt(){
 		<li><a href="#mobileWalletFin">
 			<img src="img/loan.jpg">
 		<h2>Instant Financing</h2>
-		<p class="wrap" style="font-size:8pt">Apply financing for your big asset purchase over MYR 50,000</p></a>
+		<p class="wrap" style="font-size:8pt">Apply financing for your big asset purchase</p></a>
 		</li>
 	</ul>
 	
@@ -535,11 +451,12 @@ function calcAmt(){
 		</div>
 	</footer>
 </div>
+<!-- /page -->
 
 <!-- Mobile Wallet CASA direct debit -->
 <div data-role="page" id="mobileWalletCASA">
 	<div data-role="header" data-position="fixed" data-theme="a">
-		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> Razor - Mobile Wallet</p>
+		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> Swing - Mobile Wallet</p>
 		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-left">
             <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelCD">Menu</a>
         </div>
@@ -549,7 +466,7 @@ function calcAmt(){
 	</div>
 	<!---  Menu ------>
 	<div data-role="panel" id="menuPanelCD" data-display="overlay">
-    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" /> Razor</p> 
+    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" /> Swing</p> 
     <ul data-role="listview">
 		<li><a href="#myAccount">My Account</a></li>
 		<li><a href="#mobileWallet">Mobile Wallet</a></li>
@@ -651,7 +568,7 @@ function calcAmt(){
 <!-- Mobile Wallet IPP -->
 <div data-role="page" id="mobileWalletIPP">
 	<div data-role="header" data-position="fixed" data-theme="a">
-		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> Razor - Mobile Wallet</p>
+		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> Swing - Mobile Wallet</p>
 		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-left">
             <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelIP">Menu</a>
         </div>
@@ -661,7 +578,7 @@ function calcAmt(){
 	</div>
 	<!---  Menu ------>
 	<div data-role="panel" id="menuPanelIP" data-display="overlay">
-    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" /> Razor</p> 
+    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" /> Swing</p> 
     <ul data-role="listview">
 		<li><a href="#myAccount">My Account</a></li>
 		<li><a href="#mobileWallet">Mobile Wallet</a></li>
@@ -677,7 +594,7 @@ function calcAmt(){
 	<p class="pgTitle"><span class="pgTitleRed">EASY PAYMENT</span> INSTALLMENT PLAN:</p>
 	<table id="ippTbl" class="travel" style="width:100%"><tr>
 		<td width="50%">Amount Required</td>
-		<td width="50%" style="text-align:left"><b>MYR 19,319</b></td>
+		<td width="50%" align="middle"><b>MYR 19,319</b></td>
 	</tr><tr>
 		<td width="50%">Installment Plan</td>
 		<td width="50%" style="text-align:left">
@@ -696,7 +613,7 @@ function calcAmt(){
 		</td>
 	</tr><tr>
 		<td>Monthly Installment</td>
-		<td id="ippMthAmt" style="font-weight:bold">MYR 3,542</td>
+		<td id="ippMthAmt" style="font-weight:bold;" align="middle">MYR 3,542</td>
 	</tr><tr>
 		<td style="vertical-align: top; padding-top: 11pt">Auto Debit Installment?</td>
 		<td><select id="ippAutoDebit" onclick="
@@ -707,11 +624,11 @@ function calcAmt(){
 				document.getElementById('autodebitDate').style.display = 'none';
 			}">
 			<option value="701-XXXXX547" selected>Current A/C 701xxxxx547</option>
-			<option value="701-XXXXX132">360 Account 701xxxxx132</option>
 			<option value="NA">No, I will pay manually</option>
 			</select>
 			<span id="autodebitDate" style="display:block">
-				<input type="date" id="autodebitDt" value="2018-06-01" />
+				<input type="date" id="autodebitDt" value="2018-06-01" style="background-image:url(img/cal_icon.png);
+				background-repeat:no-repeat; background-position:6px;padding-left:70px;" />
 			</span>
 		</td>
 	</tr>
@@ -766,7 +683,7 @@ function calcAmt(){
 <!-- Mobile Wallet Financing -->
 <div data-role="page" id="mobileWalletFin">
 	<div data-role="header" data-position="fixed" data-theme="a">
-		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> Razor - Mobile Wallet</p>
+		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> Swing - Mobile Wallet</p>
 		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-left">
             <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelFI">Menu</a>
         </div>
@@ -776,7 +693,7 @@ function calcAmt(){
 	</div>
 	<!---  Menu ------>
 	<div data-role="panel" id="menuPanelFI" data-display="overlay">
-    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" /> Razor</p> 
+    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" /> Swing</p> 
     <ul data-role="listview">
 		<li><a href="#myAccount">My Account</a></li>
 		<li><a href="#mobileWallet">Mobile Wallet</a></li>
@@ -881,6 +798,107 @@ function calcAmt(){
 			window.document.getElementById('genMPassConfirmation').style.display = 'none';
 			if (window.document.getElementById('genMPassConfirmationMsg').innerHTML == 'Please enter amount to proceed')
 				return false;
+		">OK</a>
+	</div>
+    </div>
+	
+	<!-- footer -->
+	<footer data-role="footer" class="ui-body-c" data-position="fixed">
+		<div data-role="navbar" >
+		<ul>
+		 <li><a href="#deal" data-icon="star" >Deals</a></li>
+		 <li><a href="#message" data-icon="mail" >My Messages</a></li>
+		 <li><a href="https://www.ocbc.com.my" data-icon="arrow-r" data-rel="external" >Go to Website</a></li>
+		</ul>
+		</div>
+	</footer>
+</div>
+<!-- /page -->
+
+<!-- Fund Transfer page -->
+<div data-role="page" id="fundTransfer">
+	<div data-role="header" data-position="fixed" data-theme="a">
+		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> Swing - Instant Transfer</p>
+		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-left">
+            <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelFT">Menu</a>
+        </div>
+		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
+            <a data-icon="gear" data-iconpos="notext" data-role="button" href="#settingPage">Settings</a>
+        </div>
+	</div>
+	<!---  Menu ------>
+	<div data-role="panel" id="menuPanelFT" data-display="overlay">
+    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" /> Swing</p> 
+    <ul data-role="listview">
+		<li><a href="#myAccount">My Account</a></li>
+		<li><a href="#mobileWallet">Mobile Wallet</a></li>
+		<li><a href="#fundTransfer">Instant Transfer</a></li>
+		<li><a href="#myApplication">My Applications</a></li>
+		<li><a data-icon="arrow-r" data-role="button" href="#loginPage">Logout</a></li>
+		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/conditions-of-access.html">Terms of Usage</a></li>
+		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/security-privacy.html">Privacy Policy</a></li>
+    </ul>
+	</div>
+	<!---- Content --->
+    <div role="main" class="ui-content">
+	<p class="pgTitle"><span class="pgTitleRed">INSTANT</span> TRANSFER:</p>
+	<table id="transferTbl" class="travel" style="width:100%"  cellspacing=0 cellpadding=0>
+		<tr>
+			<td width="40%"><b>Transfer Type:</b></td>
+			<td width="60%" style="text-align:left"><div class="flipSwitch">
+			<select id="flip1" name="flip1" data-role="slider">
+					<option value="International">International</option>
+					<option value="Domestic" selected>Domestic</option>
+			</select></div></td>
+		</tr><tr>
+			<td><b>Currency:</b></td>
+			<td><select id="transferCur">
+				<option value="MYR" selected>MYR</option><option value="SGD">SGD</option><option value="USD">USD</option><option value="EUR">EUR</option>
+				<option value="JPY">JPY</option><option value="GBP">GBP</option><option value="AUD">AUD</option><option value="CHF">CHF</option><option value="CAD">CAD</option>
+				<option value="HKD">HKD</option><option value="CNY">CNY</option><option value="NZD">NZD</option><option value="INR">INR</option><option value="IDR">IDR</option>
+				</select></td>
+		</tr><tr>
+			<td><b>Amount:</b></td>
+			<td><input id="transferAmt" type="text"></td>
+		</tr><tr>
+			<td><b>Recipient Mobile:</b></td>
+			<td><input id="recipientMobile" type="text" alt="Please include country code" value="+"></td>
+		</tr><tr>
+			<td><b></b></td>
+			<td>(Please include country code)</td>
+		</tr>
+	</table>
+	
+	<p align="left" class="font-small-i-b"><br/><br/><br/>Terms & Conditions:</p>
+	<p align="left" >
+		<ol class="font-small-i-b">
+		<li>When forex is involved, Telegraphic Transfer (TT) rates will be used</li>
+		<li>Transfer will be instant with account balance reflected immediately</li>
+		<li>No capped limit on amount allowable for transfer</li>
+		<li>Net service charge per transfer is as below:</li>
+		</ol>
+		<ul class="font-small-i-b" style="margin-left:10pt">
+			<li>For amount less than MYR 30,000 equivalent: MYR 0.05 per transfer including GST</li>
+			<li>For amount more than MYR 30,000 equivalent: MYR 3.00 per transfer including GST</li>
+		</ul>
+	</p>
+
+	<a data-role="button" href="#" class="ui-btn ui-corner-all" onclick="
+		if (window.document.getElementById('transferAmt').value == '' || window.document.getElementById('recipientMobile').value == ''){
+			window.document.getElementById('saveTransfer').innerText = 'Please fill up all the fields to initiate transfer';
+		}else{
+			mob = window.document.getElementById('recipientMobile').value;
+			if (mob.length < 8){
+				window.document.getElementById('saveTransfer').innerText = 'Invalid mobile number to initiate transfer. Please enter valid Recipient Mobile with country code';
+			}else{
+				//add codes deduct account balance
+				window.document.getElementById('saveTransfer').innerText = 'Your transfer has been successful';
+			}			
+		};
+		window.document.getElementById('startTransfer').style.display = '';">Transfer Now</a>
+	<div id="startTransfer" class="ui-corner-all" style="display:none;position: absolute; z-index:3; top:250px; left:10px; width:85%; background-color:lightGray; padding:15px; text-align:center;font-weight:bold"><span id="saveTransfer">Your transfer has been successful.</span>
+		<a data-role="button" href="#" class="ui-btn ui-corner-all" onclick="
+			window.document.getElementById('startTransfer').style.display = 'none';
 		">OK</a>
 	</div>
     </div>
