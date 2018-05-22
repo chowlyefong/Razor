@@ -1,2 +1,2 @@
-# Razor
-Razor app for Digithon 2018
+# swing
+Swing app for Digithon 2018
