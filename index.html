@@ -162,7 +162,7 @@ function yearsToMonths(year,frequency) {
 				document.body.requestFullscreen();
 			}else{	document.exitFullscreen(); }"><img src="img/ocbc.png" width="200" height="43" /></a></p>
 		<!--<p class="title">OCBC Swing<br/><br/><br/></p> -->
-		<p align="center"><br/><br/><img src="img/Swing.png"  /><br/><br/></p>
+		<p align="center"><img src="img/Swing.png"  /><br/><br/></p>
 	
         <p align="center">Login with Biometric:<br/>
 			<a href="#myAccount" onClick="
@@ -214,6 +214,7 @@ function yearsToMonths(year,frequency) {
 			};">Login</a></td>
 		</tr>
 		</table>
+		<div style="text-align:right"><br/><br/><img src="img/exit.png" onclick="window.close();" /></div>
     </div>
 	<div id="errorMsg" class="ui-corner-all" style="display:none;position: absolute; top:250px; left:10px; width:85%; background-color:lightGray; padding:15px; text-align:center;font-weight:bold">Please enter Username and Password to login.
 		<a data-role="button" href="#" class="ui-btn ui-corner-all" onclick="
@@ -222,7 +223,7 @@ function yearsToMonths(year,frequency) {
 	</div>
     <!-- /content -->
 	<div data-role="footer" data-position="fixed" data-theme="a">
-		<h4><i>Convenience for your every need!</i></h4>
+		<h4><i>Your next generation digital wallet!</i></h4>
 	</div>
 </div>
 <!-- /page -->
@@ -571,6 +572,7 @@ function yearsToMonths(year,frequency) {
 	<div id="qrCASA" class="ui-corner-all" style="display:none;position: absolute; top:300px; left:10px; width:85%; background-color:lightGray; padding:15px; text-align:center;font-weight:bold"><span id="qrCASAMsg">Payment successful. Enjoy your shopping!</span>
 		<a data-role="button" href="#mobileWallet" class="ui-btn ui-corner-all" onclick="
 			window.document.getElementById('qrCASA').style.display = 'none';
+			document.getElementById('qrResult').src = 'img/qrResult.jpg';
 			if (window.document.getElementById('qrCASAMsg').innerHTML == 'Total amount is insufficient for the purchase. Total must be MYR 19,319')
 				return false;
 		">OK</a>
@@ -685,6 +687,7 @@ function yearsToMonths(year,frequency) {
 	<div id="qrIPP" class="ui-corner-all" style="display:none;position: absolute; top:300px; left:10px; width:85%; background-color:lightGray; padding:15px; text-align:center;font-weight:bold"><span id="qrIPPMsg">Your purchase with Easy Pay Plan is successful. Enjoy your shopping!</span>
 		<a data-role="button" href="#mobileWallet" class="ui-btn ui-corner-all" onclick="
 			window.document.getElementById('qrIPP').style.display = 'none';
+			document.getElementById('qrResult').src = 'img/qrResult.jpg';
 			if (window.document.getElementById('ippAutoDebit').selectedIndex == 1){
 				showLoading('loadingIPP', 3000);
 				window.document.getElementById('qrIPPMsg').innerHTML = 'Your purchase with Easy Pay Plan is successful. Enjoy your shopping!';
@@ -920,6 +923,116 @@ function yearsToMonths(year,frequency) {
 	<div id="applyFin" class="ui-corner-all" style="display:none;position: absolute; top:300px; left:10px; width:85%; background-color:lightGray; padding:15px; text-align:center;font-weight:bold"><span id="applyFinMsg">Congratulation, your financing application #201805290043 is pre-approved !<br/><br/>Track & follow up the full application status via 'My Application'<br/></span>
 		<a data-role="button" href="#mobileWallet" class="ui-btn ui-corner-all" onclick="
 			window.document.getElementById('applyFin').style.display = 'none';
+			document.getElementById('qrResult').src = 'img/qrResult.jpg';
+		">OK</a>
+	</div>
+    </div>
+	
+	<!-- footer -->
+	<footer data-role="footer" class="ui-body-c" data-position="fixed">
+		<div data-role="navbar" >
+		<ul>
+		 <li><a href="#deal" data-icon="star" >Deals</a></li>
+		 <li><a href="#message" data-icon="mail" >My Messages</a></li>
+		 <li><a href="https://www.ocbc.com.my" data-icon="arrow-r" data-rel="external" >Go to Website</a></li>
+		</ul>
+		</div>
+	</footer>
+</div>
+<!-- /page -->
+
+<!-- My Applications -->
+<div data-role="page" id="myApplication">
+	<div data-role="header" data-position="fixed" data-theme="a">
+		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> Swing - My Applications</p>
+		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-left">
+            <a data-icon="bars" data-iconpos="notext" data-role="button" href="#menuPanelMA">Menu</a>
+        </div>
+		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
+            <a data-icon="gear" data-iconpos="notext" data-role="button" href="#settingPage">Settings</a>
+        </div>
+	</div>
+	<!---  Menu ------>
+	<div data-role="panel" id="menuPanelMA" data-display="overlay">
+    <p class="titleSmall" style="padding-bottom:6px"><img class="icon" src="img/favicon.ico" /> Swing</p> 
+    <ul data-role="listview">
+		<li><a href="#myAccount">My Account</a></li>
+		<li><a href="#mobileWallet">Mobile Wallet</a></li>
+		<li><a href="#fundTransfer">Instant Transfer</a></li>
+		<li><a href="#myApplication">My Applications</a></li>
+		<li><a data-icon="arrow-r" data-role="button" href="#loginPage">Logout</a></li>
+		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/conditions-of-access.html">Terms of Usage</a></li>
+		<li><a data-icon="arrow-r" data-role="button" href="https://www.ocbc.com.my/personal-banking/security-privacy.html">Privacy Policy</a></li>
+    </ul>
+	</div>
+	<!---- Content --->
+    <div role="main" class="ui-content">
+	<div id="loadingFApp" style="padding-top:135pt;padding-left:65pt;width:80%;height:60%;background-color:white;display:none;float:center;z-index:2;position:absolute;" ><img src="img/loading.gif" width="200" height="200" /> </div>
+	
+	<p class="pgTitle"><span class="pgTitleRed">TRACK APPLICATION</span> STATUS:</p>
+	<table id="myappTbl" class="travel" style="width:100%" cellspacing=0 cellpadding=0><tr>
+		<td width="40%">Asset Booking Form</td>
+		<td width="10%" style="text-align:left"><a data-role="button" data-icon="camera" data-iconpos="right" id="cameraDoc1" onclick="
+			var captureSuccess = function(mediaFiles) {
+				var i, path, len;
+				for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+					path = mediaFiles[i].name;
+					document.getElementById('doc1Path').innerText = path;
+				}
+			};
+			var captureError = function(error) {
+				navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
+			};
+
+			// start image capture
+			navigator.device.capture.captureImage(captureSuccess, captureError, {limit:1});
+			"></td>
+		<td width="50%"><span id="doc1Path"></span></td>
+	</tr><tr>
+		<td width="40%">Latest EA Form</td>
+		<td width="60%" colspan="2" style="text-align:left"><input type="file" id="uploadEA"></td>
+	</tr><tr>
+		<td width="40%">NRIC</td>
+		<td width="10%" style="text-align:left"><a data-role="button" data-icon="camera" data-iconpos="right" id="cameraDoc2" onclick="
+			var captureSuccess = function(mediaFiles) {
+				var i, path, len;
+				for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+					path = mediaFiles[i].name;
+					document.getElementById('doc2Path').innerText = path;
+				}
+			};
+			var captureError = function(error) {
+				navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
+			};
+
+			// start image capture
+			navigator.device.capture.captureImage(captureSuccess, captureError, {limit:1});
+			"></td>
+		<td width="50%"><span id="doc2Path"></span></td>
+	</tr>
+	</table>
+	
+	<p class="pgTitle"><span class="pgTitleRed">TERMS</span> OF FINANCING:</p>
+	<table id="finTbl2" class="travel" style="width:100%;" cellpadding=0 cellspacing=0><tr>
+		<td width="100%" align="left">
+			<fieldset data-role="controlgroup" data-mini="true">
+					<a href="#" data-role="button" data-icon="check">Credit checks passed</a>
+					<a href="#" data-role="button" data-icon="check">Income statement checks passed</a>
+					<a href="#" data-role="button" data-icon="check">Deposit checks passed</a>
+			</fieldset>
+	</tr><tr>
+		<td><br/>
+		<ul><li>You are eligible for a pre-approve financing based on the options selected.</li>
+		<li>Final approval will be subjected to the review of all provided documents.</li>
+		<li>You may monitor the status & complete the full application via the app within 5 business days</li></ul></td>
+	</tr>
+	</table> 
+	<a href="#" class="ui-btn ui-corner-all" onclick="showLoading('loadingFApp', 5000); window.document.getElementById('applyFin').style.display = 'block';">Apply for Financing</a>
+	
+	<div id="applyFin" class="ui-corner-all" style="display:none;position: absolute; top:300px; left:10px; width:85%; background-color:lightGray; padding:15px; text-align:center;font-weight:bold"><span id="applyFinMsg">Congratulation, your financing application #201805290043 is pre-approved !<br/><br/>Track & follow up the full application status via 'My Application'<br/></span>
+		<a data-role="button" href="#mobileWallet" class="ui-btn ui-corner-all" onclick="
+			window.document.getElementById('applyFin').style.display = 'none';
+			document.getElementById('qrResult').src = 'img/qrResult.jpg';
 		">OK</a>
 	</div>
     </div>
