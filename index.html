@@ -573,6 +573,7 @@ function yearsToMonths(year,frequency) {
 		<a data-role="button" href="#mobileWallet" class="ui-btn ui-corner-all" onclick="
 			window.document.getElementById('qrCASA').style.display = 'none';
 			document.getElementById('qrResult').src = 'img/qrResult.jpg';
+			document.getElementById('qrResultFld').style.display = 'none';
 			if (window.document.getElementById('qrCASAMsg').innerHTML == 'Total amount is insufficient for the purchase. Total must be MYR 19,319')
 				return false;
 		">OK</a>
@@ -688,6 +689,7 @@ function yearsToMonths(year,frequency) {
 		<a data-role="button" href="#mobileWallet" class="ui-btn ui-corner-all" onclick="
 			window.document.getElementById('qrIPP').style.display = 'none';
 			document.getElementById('qrResult').src = 'img/qrResult.jpg';
+			document.getElementById('qrResultFld').style.display = 'none';
 			if (window.document.getElementById('ippAutoDebit').selectedIndex == 1){
 				showLoading('loadingIPP', 3000);
 				window.document.getElementById('qrIPPMsg').innerHTML = 'Your purchase with Easy Pay Plan is successful. Enjoy your shopping!';
@@ -932,6 +934,7 @@ function yearsToMonths(year,frequency) {
 		<a data-role="button" href="#mobileWallet" class="ui-btn ui-corner-all" onclick="
 			window.document.getElementById('applyFin').style.display = 'none';
 			document.getElementById('qrResult').src = 'img/qrResult.jpg';
+			document.getElementById('qrResultFld').style.display = 'none';
 		">OK</a>
 	</div>
     </div>
