@@ -105,3 +105,19 @@ body {
 .flipSwitch .ui-slider-switch {
 	width: 12em;
 }
+
+
+#myapp1Tbl th {
+	text-align: center;
+	background-repeat: no-repeat;
+	height: 5em;
+	color: white;
+	font-size: 8pt;
+	font-weight: bold;
+}
+
+#myapp1Tbl td {
+	text-align: center;
+	font-weight: bold;
+	padding: 5pt;
+}
