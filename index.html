@@ -832,7 +832,7 @@ function yearsToMonths(year,frequency) {
 </div>
 <!-- /page -->
 
-<!-- Financing Application -->
+<!-- Mobile Wallet Financing 2 -->
 <div data-role="page" id="mobileWalletFin2">
 	<div data-role="header" data-position="fixed" data-theme="a">
 		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> Swing - Mobile Wallet</p>
@@ -861,7 +861,8 @@ function yearsToMonths(year,frequency) {
 	<div id="loadingFApp" style="padding-top:135pt;padding-left:65pt;width:80%;height:60%;background-color:white;display:none;float:center;z-index:2;position:absolute;" ><img src="img/loading.gif" width="200" height="200" /> </div>
 	
 	<p class="pgTitle"><span class="pgTitleRed">UPLOAD SUPPORTING</span> DOCUMENTS:</p>
-	<table id="fappTbl" class="travel" style="width:100%" cellspacing=0 cellpadding=0><tr>
+	<table id="fappTbl" class="travel" style="width:100%" cellspacing=0 cellpadding=0>
+	<tr>
 		<td width="40%">Asset Booking Form</td>
 		<td width="10%" style="text-align:left"><a data-role="button" data-icon="camera" data-iconpos="right" id="cameraDoc1" onclick="
 			var captureSuccess = function(mediaFiles) {
@@ -877,7 +878,7 @@ function yearsToMonths(year,frequency) {
 
 			// start image capture
 			navigator.device.capture.captureImage(captureSuccess, captureError, {limit:1});
-			"></td>
+			"></a></td>
 		<td width="50%"><span id="doc1Path"></span></td>
 	</tr><tr>
 		<td width="40%">Latest EA Form</td>
@@ -898,7 +899,7 @@ function yearsToMonths(year,frequency) {
 
 			// start image capture
 			navigator.device.capture.captureImage(captureSuccess, captureError, {limit:1});
-			"></td>
+			"></a></td>
 		<td width="50%"><span id="doc2Path"></span></td>
 	</tr>
 	</table>
@@ -911,6 +912,7 @@ function yearsToMonths(year,frequency) {
 					<a href="#" data-role="button" data-icon="check">Income statement checks passed</a>
 					<a href="#" data-role="button" data-icon="check">Deposit checks passed</a>
 			</fieldset>
+		</td>
 	</tr><tr>
 		<td><br/>
 		<ul><li>You are eligible for a pre-approve financing based on the options selected.</li>
@@ -918,9 +920,15 @@ function yearsToMonths(year,frequency) {
 		<li>You may monitor the status & complete the full application via the app within 5 business days</li></ul></td>
 	</tr>
 	</table> 
-	<a href="#" class="ui-btn ui-corner-all" onclick="showLoading('loadingFApp', 5000); window.document.getElementById('applyFin').style.display = 'block';">Apply for Financing</a>
+	<a href="#" class="ui-btn ui-corner-all" onclick="showLoading('loadingFApp', 5000); 
+		document.getElementById('appDate').innerHTML = new Date()).toDateString() + '<br/>'Ref: 20189043';
+		document.getElementById('appImg').src = 'url/check.jpg';
+		document.getElementById('docImg').src = 'url/wip.jpg';
+		document.getElementById('detailAppTbl').style.display = 'block';
+		document.getElementById('detailAppNARow').style.display = 'none';
+		window.document.getElementById('applyFin').style.display = 'block';">Apply for Financing</a>
 	
-	<div id="applyFin" class="ui-corner-all" style="display:none;position: absolute; top:300px; left:10px; width:85%; background-color:lightGray; padding:15px; text-align:center;font-weight:bold"><span id="applyFinMsg">Congratulation, your financing application #201805290043 is pre-approved !<br/><br/>Track & follow up the full application status via 'My Application'<br/></span>
+	<div id="applyFin" class="ui-corner-all" style="display:none;position: absolute; top:300px; left:10px; width:85%; background-color:lightGray; padding:15px; text-align:center;font-weight:bold"><span id="applyFinMsg">Congratulation, your financing application #20189043 is pre-approved !<br/><br/>Track & follow up the full application status via 'My Application'<br/></span>
 		<a data-role="button" href="#mobileWallet" class="ui-btn ui-corner-all" onclick="
 			window.document.getElementById('applyFin').style.display = 'none';
 			document.getElementById('qrResult').src = 'img/qrResult.jpg';
@@ -967,75 +975,45 @@ function yearsToMonths(year,frequency) {
 	</div>
 	<!---- Content --->
     <div role="main" class="ui-content">
-	<div id="loadingFApp" style="padding-top:135pt;padding-left:65pt;width:80%;height:60%;background-color:white;display:none;float:center;z-index:2;position:absolute;" ><img src="img/loading.gif" width="200" height="200" /> </div>
+	<div id="loadingMAApp" style="padding-top:135pt;padding-left:65pt;width:80%;height:60%;background-color:white;display:none;float:center;z-index:2;position:absolute;" ><img src="img/loading.gif" width="200" height="200" /> </div>
 	
 	<p class="pgTitle"><span class="pgTitleRed">TRACK APPLICATION</span> STATUS:</p>
-	<table id="myappTbl" class="travel" style="width:100%" cellspacing=0 cellpadding=0><tr>
-		<td width="40%">Asset Booking Form</td>
-		<td width="10%" style="text-align:left"><a data-role="button" data-icon="camera" data-iconpos="right" id="cameraDoc1" onclick="
-			var captureSuccess = function(mediaFiles) {
-				var i, path, len;
-				for (i = 0, len = mediaFiles.length; i < len; i += 1) {
-					path = mediaFiles[i].name;
-					document.getElementById('doc1Path').innerText = path;
-				}
-			};
-			var captureError = function(error) {
-				navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
-			};
-
-			// start image capture
-			navigator.device.capture.captureImage(captureSuccess, captureError, {limit:1});
-			"></td>
-		<td width="50%"><span id="doc1Path"></span></td>
+	<table id="myapp1Tbl" style="width:100%" cellspacing=0 cellpadding=0><tr>
+		<th width="25%" style="background-image:url('img/darkblueArrow.jpg');">Application</th>
+		<th width="25%" style="background-image:url('img/blueArrow.jpg')">Document<br/>Processing</th>
+		<th width="25%" style="background-image:url('img/seagreenArrow.jpg')">Approval</th>
+		<th width="25%" style="background-image:url('img/greenArrow.jpg')">Process & Disburse</th>
 	</tr><tr>
-		<td width="40%">Latest EA Form</td>
-		<td width="60%" colspan="2" style="text-align:left"><input type="file" id="uploadEA"></td>
+		<td><img id="appImg" src="" /></td>
+		<td><img id="docImg" src="" /></td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
 	</tr><tr>
-		<td width="40%">NRIC</td>
-		<td width="10%" style="text-align:left"><a data-role="button" data-icon="camera" data-iconpos="right" id="cameraDoc2" onclick="
-			var captureSuccess = function(mediaFiles) {
-				var i, path, len;
-				for (i = 0, len = mediaFiles.length; i < len; i += 1) {
-					path = mediaFiles[i].name;
-					document.getElementById('doc2Path').innerText = path;
-				}
-			};
-			var captureError = function(error) {
-				navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
-			};
-
-			// start image capture
-			navigator.device.capture.captureImage(captureSuccess, captureError, {limit:1});
-			"></td>
-		<td width="50%"><span id="doc2Path"></span></td>
+		<td><span id="appDate">No Active Application</span></td>
+		<td><span id="docDate"></span></td>
+		<td><span id="approveDate"></span></td>
+		<td><span id="disburseDate"></span></td>
 	</tr>
 	</table>
 	
-	<p class="pgTitle"><span class="pgTitleRed">TERMS</span> OF FINANCING:</p>
-	<table id="finTbl2" class="travel" style="width:100%;" cellpadding=0 cellspacing=0><tr>
-		<td width="100%" align="left">
+	<p class="pgTitle"><span class="pgTitleRed">DETAIL PROGRESS</span> OF CURRENT STATUS:</p>
+	<table id="myapp1Tbl2" class="travel" style="width:100%;" cellpadding=0 cellspacing=0>
+	<tr>
+		<td width="100%" id="detailAppTbl" style="display:none">
 			<fieldset data-role="controlgroup" data-mini="true">
-					<a href="#" data-role="button" data-icon="check">Credit checks passed</a>
-					<a href="#" data-role="button" data-icon="check">Income statement checks passed</a>
-					<a href="#" data-role="button" data-icon="check">Deposit checks passed</a>
+					<a href="#" data-role="button" data-icon="check">Asset booking verified</a>
+					<a href="#" data-role="button" data-icon="check">NRIC verified</a>
+					<a href="#" data-role="button" data-icon="check">Income statement verified</a>
+					<a href="#" data-role="button" data-icon="gear">Sales & Purchase Agreement pending</a>
 			</fieldset>
+		</td>
 	</tr><tr>
-		<td><br/>
-		<ul><li>You are eligible for a pre-approve financing based on the options selected.</li>
-		<li>Final approval will be subjected to the review of all provided documents.</li>
-		<li>You may monitor the status & complete the full application via the app within 5 business days</li></ul></td>
+		<td id="detailAppNARow" style="text-align:center">Not Applicable - You do not have any active financing application at the moment.</td>
 	</tr>
 	</table> 
-	<a href="#" class="ui-btn ui-corner-all" onclick="showLoading('loadingFApp', 5000); window.document.getElementById('applyFin').style.display = 'block';">Apply for Financing</a>
-	
-	<div id="applyFin" class="ui-corner-all" style="display:none;position: absolute; top:300px; left:10px; width:85%; background-color:lightGray; padding:15px; text-align:center;font-weight:bold"><span id="applyFinMsg">Congratulation, your financing application #201805290043 is pre-approved !<br/><br/>Track & follow up the full application status via 'My Application'<br/></span>
-		<a data-role="button" href="#mobileWallet" class="ui-btn ui-corner-all" onclick="
-			window.document.getElementById('applyFin').style.display = 'none';
-			document.getElementById('qrResult').src = 'img/qrResult.jpg';
-		">OK</a>
+	<br/><br/>
+	<a href="#mobileWallet" class="ui-btn ui-corner-all">Apply for Financing</a>
 	</div>
-    </div>
 	
 	<!-- footer -->
 	<footer data-role="footer" class="ui-body-c" data-position="fixed">
@@ -1329,42 +1307,42 @@ function yearsToMonths(year,frequency) {
 		<td width="10%"><a href="#message" data-icon="delete" data-iconpos="notext" data-role="button" onClick="
 		window.document.getElementById('msg1').style.display = 'none';
 		">Delete</a></td>
-		<td width="20%">04 Oct 17</td>
-		<td width="70%"><a href="#" >Scheduled Maintenance from 11pm, 10 Oct 17 to 4am, 11 Oct 17</a></td>
+		<td width="20%">04 May 18</td>
+		<td width="70%"><a href="#" >Scheduled Maintenance from 11pm, 10 May 18 to 4am, 11 May 18</a></td>
 	</tr></table></div>
 	<div id="msg2" style="display:block"><table class="msg"><tr>
 		<td width="10%"><a href="#message" data-icon="delete" data-iconpos="notext" data-role="button" onClick="
 		window.document.getElementById('msg2').style.display = 'none';
 		">Delete</a></td>
-		<td width="20%">12 Oct 17</td>
-		<td width="70%"><a href="#" >Launch of new OCBC OneLife App!</a></td>
+		<td width="20%">12 May 18</td>
+		<td width="70%"><a href="#" >Launch of new OCBC Swing App!</a></td>
 	</tr></table></div>
 	<div id="msg3" style="display:block"><table class="msg"><tr>
 		<td width="10%"><a href="#message" data-icon="delete" data-iconpos="notext" data-role="button" onClick="
 		window.document.getElementById('msg3').style.display = 'none';
 		">Delete</a></td>
-		<td width="20%">14 Oct 17</td>
-		<td width="70%"><a href="#" >Your Reward for Installing OCBC Navigator & Organizer App</a></td>
+		<td width="20%">14 May 18</td>
+		<td width="70%"><a href="#" >Your Reward for Installing OCBC Swing App</a></td>
 	</tr></table></div>
 	<div id="msg4" style="display:block"><table class="msg"><tr>
 		<td width="10%"><a href="#message" data-icon="delete" data-iconpos="notext" data-role="button" onClick="
 		window.document.getElementById('msg4').style.display = 'none';
 		">Delete</a></td>
-		<td width="20%">15 Oct 17</td>
-		<td width="70%"><a href="#" >Re: Your Enquiry on OCBC Navigator & Organizer App</a></td>
+		<td width="20%">15 May 18</td>
+		<td width="70%"><a href="#" >Re: Your Enquiry on OCBC Swing App</a></td>
 	</tr></table></div>
 	<div id="msg5" style="display:block"><table class="msg"><tr>
 		<td width="10%"><a href="#message" data-icon="delete" data-iconpos="notext" data-role="button" onClick="
 		window.document.getElementById('msg5').style.display = 'none';
 		">Delete</a></td>
-		<td width="20%">20 Oct 17</td>
-		<td width="70%"><a href="#" >Revised Deposit Rates Effective 1st Nov 17</a></td>
+		<td width="20%">20 May 18</td>
+		<td width="70%"><a href="#" >Revised Deposit Rates Effective 1st Jun 18</a></td>
 	</tr></table></div>
 	<div id="msg6" style="display:block"><table class="msg"><tr>
 		<td width="10%"><a href="#message" data-icon="delete" data-iconpos="notext" data-role="button" onClick="
 		window.document.getElementById('msg6').style.display = 'none';
 		">Delete</a></td>
-		<td width="20%">03 Nov 17</td>
+		<td width="20%">03 Jun 18</td>
 		<td width="70%"><a href="#" >Introducing a new Credit Card for Frequent Travellers!</a></td>
 	</tr></table></div>
 	<!-- spare for queue ticket counter -->
@@ -1372,14 +1350,14 @@ function yearsToMonths(year,frequency) {
 		<td width="10%"><a href="#message" data-icon="delete" data-iconpos="notext" data-role="button" onClick="
 		window.document.getElementById('msg7').style.display = 'none';
 		">Delete</a></td>
-		<td width="20%">24 Nov 17</td>
+		<td width="20%">24 Jun 18</td>
 		<td width="70%"><a href="#" >Your queue ticket number for <span id="msgBrTitle7"></span></a></td>
 	</tr></table></div>
 	<div id="msg8" style="display:none"><table class="msg"><tr>
 		<td width="10%"><a href="#message" data-icon="delete" data-iconpos="notext" data-role="button" onClick="
 		window.document.getElementById('msg8').style.display = 'none';
 		">Delete</a></td>
-		<td width="20%">24 Nov 17</td>
+		<td width="20%">24 Jun 18</td>
 		<td width="70%"><a href="#" >Your queue ticket number for <span id="msgBrTitle8"></span></a></td>
 	</tr></table></div>
 	</div>
@@ -1463,388 +1441,6 @@ function yearsToMonths(year,frequency) {
 </div>
 <!-- /page -->
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- Phone Dialing Page -->
-<div data-role="page" id="phoneDial" data-theme="a"  style="background-color:black">
-	<!---- Content --->
-    <div role="main" class="ui-content" >
-	<a href="#" class="ui-btn ui-corner-all">Dialing</a>
-	<p>&nbsp;</p>
-	<p>&nbsp;</p>
-	<p align="center"><img src="img/phoneCalling.png" height="150" width="150"></p>
-	<p style="text-align:center; font-weight:bold;color:white"><span id="phoneNum">+603 2875 6243</span></p>
-	<p>&nbsp;</p>
-	<p align="center"><a href="#nearestBr" >
-	<img src="img/phoneEndCall.jpg"></p>
-    </a></div>
-	
-</div>
-<!-- /page -->
-
-<!-- Branch Get Ticket Page -->
-<div data-role="page" id="getTicket">
-	<div data-role="header" data-position="fixed" data-theme="a" data-add-back-btn="true">
-		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> OneLife - Nearest Branch</p>	
-		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
-            <a data-icon="gear" data-iconpos="notext" data-role="button" href="#settingPage">Settings</a>
-        </div>
-	</div>
-	<!---- Content --->
-    <div role="main" class="ui-content" >
-	<div class="ui-btn ui-corner-all">Queue Ticket</div>
-	<p>&nbsp;</p>
-	<p align="center" class="font-small"><b>Branch: </b><span id="brName" class="pgTitleRed"></span></p>
-	<p align="center">
-	<table border="0" padding="0"><tr>
-	<td width="25%" class="blue"><a href="#" class="ui-corner-all ui-btn"><h1 id="ctq1">1</h1></a></td>
-	<td width="25%" class="blue"><a href="#" class="ui-corner-all ui-btn"><h1 id="ctq2">3</h1></a></td>
-	<td width="25%" class="blue"><a href="#" class="ui-corner-all ui-btn"><h1 id="ctq3">5</h1></a></td>
-	<td width="25%" class="blue"><a href="#" class="ui-corner-all ui-btn"><h1 id="ctq4">0</h1></a></td>
-	</tr></table>
-	</p>
-	<p class="font-small" style="text-align:center;"><b>Estimated Time till Served: </b><span class="pgTitleRed" id="brMin">15 mins</span><br/><br/>
-	<span id="queueReminderTxt">Please ensure you will arrive in time at the branch. See you later!</span></p>
-	<p>&nbsp;</p>
-	<a href="#" class="ui-btn ui-corner-all" onclick="
-	if (window.document.getElementById('brName').innerText == 'KL Main'){
-		if (window.document.getElementById('msgBrTitle7').innerText == 'OCBC KL Main - ' + tktKLM){
-			window.document.getElementById('msg7').style.display = 'none';
-		}else if (window.document.getElementById('msgBrTitle8').innerText == 'OCBC KL Main - ' + tktKLM){
-			window.document.getElementById('msg8').style.display = 'none';
-		}
-		if (window.document.getElementById('ctq1').innerText != '2'){
-			tktKLM = tktKLM - 1;
-			waitTimeKLM = waitTimeKLM - 3;
-			noCustKLM = noCustKLM - 1;
-			window.document.getElementById('klmQueue').innerText = noCustKLM.toString();
-		}else{
-			tktKLM2 = tktKLM2 - 1;
-			waitTimeKLM2 = waitTimeKLM2 - 15;
-			noCustKLM2 = noCustKLM2 - 1;
-			window.document.getElementById('klmQueue').innerText = noCustKLM2.toString();
-		}
-	}else{
-		if (window.document.getElementById('msgBrTitle7').innerText == 'OCBC Jln Ampang - ' + tktAMP){
-			window.document.getElementById('msg7').style.display = 'none';
-		}else if (window.document.getElementById('msgBrTitle8').innerText == 'OCBC Jln Ampang - ' + tktAMP){
-			window.document.getElementById('msg8').style.display = 'none';
-		}
-		if (window.document.getElementById('ctq1').innerText != '2'){
-			tktAMP = tktAMP - 1;
-			waitTimeAMP = waitTimeAMP - 3;
-			noCustAMP = noCustAMP - 1;
-			window.document.getElementById('ampQueue').innerText = noCustAMP.toString();
-		}else{
-			tktAMP2 = tktAMP2 - 1;
-			waitTimeAMP2 = waitTimeAMP2 - 15;
-			noCustAMP2 = noCustAMP2 - 1;
-			window.document.getElementById('ampQueue').innerText = noCustAMP2.toString();
-		}
-	};
-	window.document.getElementById('brMin').innerText = 'N/A';
-	window.document.getElementById('queueReminderTxt').innerText = 'Your queue ticket has been cancelled';
-	window.document.getElementById('ctq1').innerText = '-';
-	window.document.getElementById('ctq2').innerText = '-';
-	window.document.getElementById('ctq3').innerText = '-';
-	window.document.getElementById('ctq4').innerText = '-';
-	">Cancel Ticket</a>
-	<p align="left" class="font-small-i-b">Terms & Conditions:</p>
-	<p align="left" >
-		<ol class="font-small-i-b"><li>Please be at the branch's banking hall to refer to the queue ticket number for latest status.</li>
-		<li>Your number will be skip if you are not present at the time it is called</li></ol>
-		</p>
-	</div>
-	
-</div>
-<!-- /page -->
-
-<!-- Mobile Cash PIN Page -->
-<div data-role="page" id="mcashPin">
-	<div data-role="header" data-position="fixed" data-theme="a" data-add-back-btn="true">
-		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> OneLife - Mobile Cash</p>	
-		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
-            <a data-icon="gear" data-iconpos="notext" data-role="button" href="#settingPage">Settings</a>
-        </div>
-	</div>
-	<!---- Content --->
-    <div role="main" class="ui-content" >
-	<a href="#" class="ui-btn ui-corner-all">Mobile Cash Withdrawal Pass</a>
-	<p align="center" class="font-small"><b>Branch / Location: </b><span id="mcashLocation" class="pgTitleRed"></span></p>
-	<p align="center">
-	<table border="0" padding="0"><tr>
-	<td width="12%" class="green"><a href="#" class="ui-corner-all ui-btn"><h1 id="mctq1">1</h1></a></td>
-	<td width="12%" class="green"><a href="#" class="ui-corner-all ui-btn"><h1 id="mctq2">3</h1></a></td>
-	<td width="12%" class="green"><a href="#" class="ui-corner-all ui-btn"><h1 id="mctq3">5</h1></a></td>
-	<td width="12%" class="green"><a href="#" class="ui-corner-all ui-btn"><h1 id="mctq4">6</h1></a></td>
-	<td width="12%" class="green"><a href="#" class="ui-corner-all ui-btn"><h1 id="mctq5">4</h1></a></td>
-	<td width="12%" class="green"><a href="#" class="ui-corner-all ui-btn"><h1 id="mctq6">1</h1></a></td>
-	</tr></table>
-	</p>
-	<p class="font-small" style="text-align:center;"><b>Valid for Amount (MYR): </b><span class="pgTitleRed" id="mcashAmt">150</span><br/><br/>
-	<span id="queueReminderTxt"><ol>
-		<li>Please proceed to the location & enter the passcode into ATM/Cashier terminal.</li>
-		<li>If the passcode is valid, you will be prompted to authenticate with your PIN number.</li>
-		<li>Enter your PIN to authenticate, once successful cash will be dispense for you.</li>
-		</ol></span></p>
-	<!-- <a href="#" class="ui-btn ui-corner-all" onclick="
-	if (window.document.getElementById('brName').innerText == 'KL Main'){
-		if (window.document.getElementById('msgBrTitle7').innerText == 'OCBC KL Main - ' + tktKLM){
-			window.document.getElementById('msg7').style.display = 'none';
-		}else if (window.document.getElementById('msgBrTitle8').innerText == 'OCBC KL Main - ' + tktKLM){
-			window.document.getElementById('msg8').style.display = 'none';
-		}
-		tktKLM = tktKLM - 1;
-		waitTimeKLM = waitTimeKLM - 3;
-		noCustKLM = noCustKLM - 1;
-		window.document.getElementById('klmQueue').innerText = noCustKLM.toString();
-		
-	}else{
-		if (window.document.getElementById('msgBrTitle7').innerText == 'OCBC Jln Ampang - ' + tktAMP){
-			window.document.getElementById('msg7').style.display = 'none';
-		}else if (window.document.getElementById('msgBrTitle8').innerText == 'OCBC Jln Ampang - ' + tktAMP){
-			window.document.getElementById('msg8').style.display = 'none';
-		}
-		tktAMP = tktAMP - 1;
-		waitTimeAMP = waitTimeAMP - 3;
-		noCustAMP = noCustAMP - 1;
-		window.document.getElementById('ampQueue').innerText = noCustAMP.toString();
-	};
-	window.document.getElementById('brMin').innerText = 'N/A';
-	window.document.getElementById('queueReminderTxt').innerText = 'Your queue ticket has been cancelled';
-	window.document.getElementById('ctq1').innerText = '-';
-	window.document.getElementById('ctq2').innerText = '-';
-	window.document.getElementById('ctq3').innerText = '-';
-	window.document.getElementById('ctq4').innerText = '-';
-	">Cancel Ticket</a> -->
-	<p align="left" class="font-small"><b><u>Terms & Conditions:</u></b></p>
-	<p align="left" >
-		<ol class="font-small"><li>Passcode will be valid for only 15 mins.</li>
-		<li>Your account will be lock after 3 unsuccessful attempt.  Please call OCBC Customer Service to reactivate. </li></ol>
-		</p>
-	</div>
-	
-</div>
-<!-- /page -->
-
-<!-- All branches Page -->
-<div data-role="page" id="allBranches">
-	<div data-role="header" data-position="fixed" data-theme="a" data-add-back-btn="true">
-		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> OneLife - Branches Network</p>
-		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
-            <a data-icon="gear" data-iconpos="notext" data-role="button" href="#settingPage">Settings</a>
-        </div>
-	</div>
-
-	<!-- content -->
-    <div role="main" class="ui-content">
-	
-	<ul data-role="listview" data-filter="true" class="ui-mini">
-        <li><div class="brTitle">Ampang</div>
-			<p class="ui-li-aside"><a href="#phoneDial" data-role="button" data-icon="phone" data-iconpos="notext" onclick="window.document.getElementById('phoneNum').innerText = '+603 4264 1850';">Phone</a></p>
-			<p class="font-small"><div class="brHour"><b>Banking Hour:</b> 09:30-16:00<br/><b>Personal Banking:</b> 09:30-17:00</div></p>
-			<div class="font-small wrap">Menara Great Eastern, No.303 Jalan Ampang, 50450 Kuala Lumpur</div>
-		</li>
-        <li><div class="brTitle">Alor Setar</div>
-			<p class="ui-li-aside"><a href="#phoneDial" data-role="button" data-icon="phone" data-iconpos="notext" onclick="window.document.getElementById('phoneNum').innerText = '+604 774 7618';">Phone</a></p>
-			<p class="font-small"><div class="brHour"><b>Banking Hour:</b> 09:30-16:00<br/><b>Personal Banking:</b> 09:30-17:00</div></p>
-			<div class="font-small wrap">209, Jalan Gangsa, Kawasan Perusahaan Mergong 2, 05150 Alor Setar, Kedah</div>
-		</li>
-		<li><div class="brTitle">Batu Bahat</div>
-			<p class="ui-li-aside"><a href="#phoneDial" data-role="button" data-icon="phone" data-iconpos="notext" onclick="window.document.getElementById('phoneNum').innerText = '+607 436 7550';">Phone</a></p>
-			<p class="font-small"><div class="brHour"><b>Banking Hour:</b> 09:30-16:00<br/><b>Personal Banking:</b> 09:30-17:00</div></p>
-			<div class="font-small wrap">108-2 Jalan Rahmat, 83000 Batu Pahat, Johor</div>
-		</li>
-		<li><div class="brTitle">Bukit Damansara</div>
-			<p class="ui-li-aside"><a href="#phoneDial" data-role="button" data-icon="phone" data-iconpos="notext" onclick="window.document.getElementById('phoneNum').innerText = '+603 2091 1888';">Phone</a></p>
-			<p class="font-small"><div class="brHour"><b>Banking Hour:</b> 09:30-16:00<br/><b>Personal Banking:</b> 09:30-17:00</div></p>
-			<div class="font-small wrap">19 Jalan Setiapuspa, Bukit Damansara, 50490 Kuala Lumpur</div>
-		</li>
-		<li><div class="brTitle">Bukit Mertajam</div>
-			<p class="ui-li-aside"><a href="#phoneDial" data-role="button" data-icon="phone" data-iconpos="notext" onclick="window.document.getElementById('phoneNum').innerText = '+604 537 7337';">Phone</a></p>
-			<p class="font-small"><div class="brHour"><b>Banking Hour:</b> 09:30-16:00<br/><b>Personal Banking:</b> 09:30-17:00</div></p>
-			<div class="font-small wrap">No. 47, 49, 51 & 53, Jalan Perniagaan Gemilang 1, Pusat Perniagaan Gemilang, 14000 Bukit Mertajam, Pulau Pinang</div>
-		</li>
-		<li><div class="brTitle">Cheras</div>
-			<p class="ui-li-aside"><a href="#phoneDial" data-role="button" data-icon="phone" data-iconpos="notext" onclick="window.document.getElementById('phoneNum').innerText = '+603 9145 3611';">Phone</a></p>
-			<p class="font-small"><div class="brHour"><b>Banking Hour:</b> 09:30-16:00<br/><b>Personal Banking:</b> 09:30-17:00</div></p>
-			<div class="font-small wrap">No. 1, 3, 5 & 7 Jalan Damai Niaga, Alam Damai, Cheras 56000 Kuala Lumpur</div>
-		</li>
-		<li><div class="brTitle">Ipoh</div>
-			<p class="ui-li-aside"><a href="#phoneDial" data-role="button" data-icon="phone" data-iconpos="notext" onclick="window.document.getElementById('phoneNum').innerText = '+605 208 6350';">Phone</a></p>
-			<p class="font-small"><div class="brHour"><b>Banking Hour:</b> 09:30-16:00<br/><b>Personal Banking:</b> 09:30-17:00</div></p>
-			<div class="font-small wrap">2 Jalan Dato Maharaja Lela, 30000 Ipoh, Perak</div>
-		</li>
-		<li><div class="brTitle">Johor Bahru</div>
-			<p class="ui-li-aside"><a href="#phoneDial" data-role="button" data-icon="phone" data-iconpos="notext" onclick="window.document.getElementById('phoneNum').innerText = '+607 223 3223';">Phone</a></p>
-			<p class="font-small"><div class="brHour"><b>Banking Hour:</b> 09:30-16:00<br/><b>Personal Banking:</b> 09:30-17:00</div></p>
-			<div class="font-small wrap">1 Jalan Ibrahim, 80000 Johor Bahru</div>
-		</li>
-		<li><div class="brTitle">Kajang</div>
-			<p class="ui-li-aside"><a href="#phoneDial" data-role="button" data-icon="phone" data-iconpos="notext" onclick="window.document.getElementById('phoneNum').innerText = '+603 8913 1954';">Phone</a></p>
-			<p class="font-small"><div class="brHour"><b>Banking Hour:</b> 09:30-16:00<br/><b>Personal Banking:</b> 09:30-17:00</div></p>
-			<div class="font-small wrap">4 & 5 Jalan Raja Haroun, 43000 Kajang, Selangor</div>
-		</li>
-		<li><div class="brTitle">Kepong</div>
-			<p class="ui-li-aside"><a href="#phoneDial" data-role="button" data-icon="phone" data-iconpos="notext" onclick="window.document.getElementById('phoneNum').innerText = '+603 6252 2228';">Phone</a></p>
-			<p class="font-small"><div class="brHour"><b>Banking Hour:</b> 09:30-16:00<br/><b>Personal Banking:</b> 09:30-17:00</div></p>
-			<div class="font-small wrap">60 Vista Magna, Jalan Prima, Metro Prima Kepong, 52100 Kuala Lumpur</div>
-		</li>
-		<li><div class="brTitle">Klang</div>
-			<p class="ui-li-aside"><a href="#phoneDial" data-role="button" data-icon="phone" data-iconpos="notext" onclick="window.document.getElementById('phoneNum').innerText = '+603 3375 8828';">Phone</a></p>
-			<p class="font-small"><div class="brHour"><b>Banking Hour:</b> 09:30-16:00<br/><b>Personal Banking:</b> 09:30-17:00</div></p>
-			<div class="font-small wrap">19 Jalan Stesen, 41000 Klang, Selangor</div>
-		</li>
-		<li><div class="brTitle">Kluang</div>
-			<p class="ui-li-aside"><a href="#phoneDial" data-role="button" data-icon="phone" data-iconpos="notext" onclick="window.document.getElementById('phoneNum').innerText = '+607 778 7550';">Phone</a></p>
-			<p class="font-small"><div class="brHour"><b>Banking Hour:</b> 09:30-16:00<br/><b>Personal Banking:</b> 09:30-17:00</div></p>
-			<div class="font-small wrap">8A Jalan Dato' Haji Hassan, 86000 Kluang, Johor</div>
-		</li>
-		<li><div class="brTitle">KL Main</div>
-			<p class="ui-li-aside"><a href="#phoneDial" data-role="button" data-icon="phone" data-iconpos="notext" onclick="window.document.getElementById('phoneNum').innerText = '+603 2034 5148';">Phone</a></p>
-			<p class="font-small"><div class="brHour"><b>Banking Hour:</b> 09:30-16:00<br/><b>Personal Banking:</b> 09:30-17:00</div></p>
-			<div class="font-small wrap">Mezzanine Floor, Menara OCBC, 18 Jalan Tun Perak, 50050 Kuala Lumpur</div>
-		</li>
-		<li><div class="brTitle">Kulai Jaya</div>
-			<p class="ui-li-aside"><a href="#phoneDial" data-role="button" data-icon="phone" data-iconpos="notext" onclick="window.document.getElementById('phoneNum').innerText = '+607 661 8788';">Phone</a></p>
-			<p class="font-small"><div class="brHour"><b>Banking Hour:</b> 09:30-16:00<br/><b>Personal Banking:</b> 09:30-17:00</div></p>
-			<div class="font-small wrap">202, 203 & 204 Jalan Kenanga 29/2, Bandar Indapura, Kulaijaya, 81000, Johor</div>
-		</li>
-		<li><div class="brTitle">Kota Bahru</div>
-			<p class="ui-li-aside"><a href="#phoneDial" data-role="button" data-icon="phone" data-iconpos="notext" onclick="window.document.getElementById('phoneNum').innerText = '+609 747 4503';">Phone</a></p>
-			<p class="font-small"><div class="brHour"><b>Sun - Thu:<br/>Banking Hour:</b> 09:30-16:30<br/><b>Personal Banking:</b> 09:30-17:00</div></p>
-			<div class="font-small wrap">3940, Jalan Temenggong, 15000 Kota Bharu, Kelantan</div>
-		</li>
-		<li><div class="brTitle">Kota Kemuning</div>
-			<p class="ui-li-aside"><a href="#phoneDial" data-role="button" data-icon="phone" data-iconpos="notext" onclick="window.document.getElementById('phoneNum').innerText = '+603 5123 5216';">Phone</a></p>
-			<p class="font-small"><div class="brHour"><b>Banking Hour:</b> 09:30-16:00<br/><b>Personal Banking:</b> 09:30-17:00</div></p>
-			<div class="font-small wrap">27, Jalan Anggerik Vanilla BF 31/BF, Business Park 3, Kota Kemuning, 40460 Shah Alam, Selangor</div>
-		</li>
-		<li><div class="brTitle">Melaka</div>
-			<p class="ui-li-aside"><a href="#phoneDial" data-role="button" data-icon="phone" data-iconpos="notext" onclick="window.document.getElementById('phoneNum').innerText = '+606 281 3111';">Phone</a></p>
-			<p class="font-small"><div class="brHour"><b>7-Day Banking Hour:</b> 09:30-18:00<br/><b>Personal Banking:</b> 09:30-19:00</div></p>
-			<div class="font-small wrap">Lot FG001 Ground Floor, Dataran Pahlawan Melaka Megamall, Jalan Merdeka, 75000 Bandar Hilir, Melaka</div>
-		</li>
-		<li><div class="brTitle">Muar</div>
-			<p class="ui-li-aside"><a href="#phoneDial" data-role="button" data-icon="phone" data-iconpos="notext" onclick="window.document.getElementById('phoneNum').innerText = '+606 956 3639';">Phone</a></p>
-			<p class="font-small"><div class="brHour"><b>Banking Hour:</b> 09:30-16:00<br/><b>Personal Banking:</b> 09:30-17:00</div></p>
-			<div class="font-small wrap">26 Jalan Maharani, 84000 Muar, Johor</div>
-		</li>
-		<li><div class="brTitle">Penang</div>
-			<p class="ui-li-aside"><a href="#phoneDial" data-role="button" data-icon="phone" data-iconpos="notext" onclick="window.document.getElementById('phoneNum').innerText = '+604 262 6000';">Phone</a></p>
-			<p class="font-small"><div class="brHour"><b>Banking Hour:</b> 09:30-16:00<br/><b>Personal Banking:</b> 09:30-17:00</div></p>
-			<div class="font-small wrap">36 Lebuh Pantai, 10300 Pulau Pinang</div>
-		</li>
-		<li><div class="brTitle">Petaling Jaya</div>
-			<p class="ui-li-aside"><a href="#phoneDial" data-role="button" data-icon="phone" data-iconpos="notext" onclick="window.document.getElementById('phoneNum').innerText = '+603 7719 9688';">Phone</a></p>
-			<p class="font-small"><div class="brHour"><b>Banking Hour:</b> 09:30-16:00<br/><b>Personal Banking:</b> 09:30-17:00</div></p>
-			<div class="font-small wrap">89, 91 & 93 Jalan SS21/60, Damansara Utama, 47400 Petaling Jaya, Selangor</div>
-		</li>
-		<li><div class="brTitle">Puchong</div>
-			<p class="ui-li-aside"><a href="#phoneDial" data-role="button" data-icon="phone" data-iconpos="notext" onclick="window.document.getElementById('phoneNum').innerText = '+603 8064 7000';">Phone</a></p>
-			<p class="font-small"><div class="brHour"><b>Banking Hour:</b> 09:30-16:00<br/><b>Personal Banking:</b> 09:30-17:00</div></p>
-			<div class="font-small wrap">GF 2 & 3, 1F 1 & 2, Tower 2 @ PFCC, Jalan Puteri 1/2, Bandar Puteri, 47100, Puchong, Selangor</div>
-		</li>
-		<li><div class="brTitle">Seremban</div>
-			<p class="ui-li-aside"><a href="#phoneDial" data-role="button" data-icon="phone" data-iconpos="notext" onclick="window.document.getElementById('phoneNum').innerText = '+606 762 8100';">Phone</a></p>
-			<p class="font-small"><div class="brHour"><b>Banking Hour:</b> 09:30-16:00<br/><b>Personal Banking:</b> 09:30-17:00</div></p>
-			<div class="font-small wrap">63-65 Jalan Dato Bandar Tunggal, 70000 Seremban, Negeri Sembilan</div>
-		</li>
-		<li><div class="brTitle">Skudai</div>
-			<p class="ui-li-aside"><a href="#phoneDial" data-role="button" data-icon="phone" data-iconpos="notext" onclick="window.document.getElementById('phoneNum').innerText = '+607 555 8809';">Phone</a></p>
-			<p class="font-small"><div class="brHour"><b>Banking Hour:</b> 09:30-16:00<br/><b>Personal Banking:</b> 09:30-17:00</div></p>
-			<div class="font-small wrap">No 143 & 145, Jalan Sutera Tanjung 8/2 Taman Sutera Utama 81300 Skudai, Johor</div>
-		</li>
-		<li><div class="brTitle">Subang Jaya</div>
-			<p class="ui-li-aside"><a href="#phoneDial" data-role="button" data-icon="phone" data-iconpos="notext" onclick="window.document.getElementById('phoneNum').innerText = '+603 8022 6200';">Phone</a></p>
-			<p class="font-small"><div class="brHour"><b>Banking Hour:</b> 09:30-16:00<br/><b>Personal Banking:</b> 09:30-17:00</div></p>
-			<div class="font-small wrap">1A-A - 4A-A, Jalan USJ 10/1A, Pusat Perniagaan USJ 10, 47610 UEP Subang Jaya, Selangor</div>
-		</li>
-		<li><div class="brTitle">Taman Molek</div>
-			<p class="ui-li-aside"><a href="#phoneDial" data-role="button" data-icon="phone" data-iconpos="notext" onclick="window.document.getElementById('phoneNum').innerText = '+607 356 4338';">Phone</a></p>
-			<p class="font-small"><div class="brHour"><b>Weekday Banking:</b> 09:30-16:00<br/><b>Personal Banking:</b> 09:30-17:00<br/><br/><b>Weekend Banking:</b> 10:00-16:00</div></p>
-			<div class="font-small wrap">47 & 49 Jalan Molek 1/29, Taman Molek, 81100 Johor</div>
-		</li>
-    </ul>
-    </div>
-	
-	<!-- footer -->
-	<footer data-role="footer" class="ui-body-c" data-position="fixed">
-		<div data-role="navbar" >
-		<ul>
-		 <li><a href="#deal" data-icon="star" >Deals</a></li>
-		 <li><a href="#message" data-icon="mail" >My Messages</a></li>
-		 <li><a href="https://www.ocbc.com.my" data-icon="arrow-r" data-rel="external" >Go to Website</a></li>
-		</ul>
-		</div>
-	</footer>
-</div>
-<!-- /page -->
-
-<!-- View Scheduled Expenses page -->
-<div data-role="page" id="viewScheduleExp">
-	<div data-role="header" data-position="fixed" data-theme="a" data-add-back-btn="true">
-		<p class="titleSmall"><img class="icon" src="img/favicon.ico" /> OneLife - Scheduled Expenses</p>
-		<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
-            <a data-icon="gear" data-iconpos="notext" data-role="button" href="#settingPage">Settings</a>
-        </div>
-	</div>
-	<!---- Content --->
-    <div role="main" class="ui-content">
-	<p class="pgTitle"><span class="pgTitleRed">SCHEDULED EXPENSES</span> BY MONTH</p>
-	<div data-role="collapsibleset" data-theme="a" class="ui-mini">
-		<div data-role="collapsible" data-theme="a" data-content-theme="a">
-		<h2>November 2017</h2>
-		    <ul data-role="listview" id="novExp">
-		        <li><b>15/Nov/2017</b> - Car Loan <p class="ui-li-aside" style="font-size:9pt">MYR 400</p></li>
-		        <li><b>20/Nov/2017</b> - Security Fees <p class="ui-li-aside" style="font-size:9pt">MYR 250</p></li>
-				<li style="display:none" id='novExp1'><b><span id="novDt1"></span></b> - <span id="novDesc1"></span> <p class="ui-li-aside" style="font-size:9pt">MYR <span id="novAmt1"></span></p></li>
-				<li style="display:none" id='novExp2'><b><span id="novDt2"></span></b> - <span id="novDesc2"></span> <p class="ui-li-aside" style="font-size:9pt">MYR <span id="novAmt2"></span></p></li>
-				<li style="display:none" id='novExp3'><b><span id="novDt3"></span></b> - <span id="novDesc3"></span> <p class="ui-li-aside" style="font-size:9pt">MYR <span id="novAmt3"></span></p></li>
-				<li style="display:none" id='novExp4'><b><span id="novDt4"></span></b> - <span id="novDesc4"></span> <p class="ui-li-aside" style="font-size:9pt">MYR <span id="novAmt4"></span></p></li>
-				<li style="display:none" id='novExp5'><b><span id="novDt5"></span></b> - <span id="novDesc5"></span> <p class="ui-li-aside" style="font-size:9pt">MYR <span id="novAmt5"></span></p></li>
-		    </ul>
-		</div>
-		<div data-role="collapsible" data-theme="a" data-content-theme="a">
-		<h2>December 2017</h2>
-		    <ul data-role="listview" id="decExp">
-		        <li><b>15/Dec/2017</b> - Car Loan <p class="ui-li-aside" style="font-size:9pt">MYR 400</p></li>
-		        <li><b>20/Dec/2017</b> - Security Fees <p class="ui-li-aside" style="font-size:9pt">MYR 250</p></li>
-				<li><b>21/Dec/2017</b> - Christmas Gifts <p class="ui-li-aside" style="font-size:9pt">MYR 300</p></li>
-				<li style="display:none" id='decExp1'><b><span id="decDt1"></span></b> - <span id="decDesc1"></span> <p class="ui-li-aside" style="font-size:9pt">MYR <span id="decAmt1"></span></p></li>
-				<li style="display:none" id='decExp2'><b><span id="decDt2"></span></b> - <span id="decDesc2"></span> <p class="ui-li-aside" style="font-size:9pt">MYR <span id="decAmt2"></span></p></li>
-				<li style="display:none" id='decExp3'><b><span id="decDt3"></span></b> - <span id="decDesc3"></span> <p class="ui-li-aside" style="font-size:9pt">MYR <span id="decAmt3"></span></p></li>
-				<li style="display:none" id='decExp4'><b><span id="decDt4"></span></b> - <span id="decDesc4"></span> <p class="ui-li-aside" style="font-size:9pt">MYR <span id="decAmt4"></span></p></li>
-				<li style="display:none" id='decExp5'><b><span id="decDt5"></span></b> - <span id="decDesc5"></span> <p class="ui-li-aside" style="font-size:9pt">MYR <span id="decAmt5"></span></p></li>
-		    </ul>
-		</div>
-	</div>
-    </div>
-	
-	<!-- footer -->
-	<footer data-role="footer" class="ui-body-c" data-position="fixed">
-		<div data-role="navbar" >
-		<ul>
-		 <li><a href="#deal" data-icon="star" >Deals</a></li>
-		 <li><a href="#message" data-icon="mail" >My Messages</a></li>
-		 <li><a href="https://www.ocbc.com.my" data-icon="arrow-r" data-rel="external" >Go to Website</a></li>
-		</ul>
-		</div>
-	</footer>
-</div>
-<!-- /page -->
 
 </body>
 </html>
