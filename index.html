@@ -1229,16 +1229,16 @@ function yearsToMonths(year,frequency) {
 			mob = window.document.getElementById('recipientMobile').value;
 			if (mob.length < 8){
 				window.document.getElementById('saveTransfer').innerText = 'Invalid mobile number to initiate transfer. Please enter valid Recipient Mobile with country code';
-				window.document.getElementById('startTransfer').style.display = '';
+				window.document.getElementById('startTransfer').style.display = 'block';
 			}else{
 				//add codes deduct account balance
 				showLoading('loadingTrf', 3000);
 				window.document.getElementById('saveTransfer').innerText = 'Your transfer has been successful';
-				window.document.getElementById('startTransfer').style.display = '';
+				window.document.getElementById('startTransfer').style.display = 'block';
 				return false;
 			}			
 		};">Transfer Now</a>
-	<div id="startTransfer" class="ui-corner-all" style="display:none;position: absolute; z-index:3; top:250px; left:10px; width:85%; background-color:lightGray; padding:15px; text-align:center;font-weight:bold"><span id="saveTransfer">Your transfer has been successful.</span>
+	<div id="startTransfer" class="ui-corner-all" style="display:none;position: absolute; top:250px; left:10px; width:85%; background-color:lightGray; padding:15px; text-align:center;font-weight:bold"><span id="saveTransfer">Your transfer has been successful.</span>
 		<a data-role="button" href="#" class="ui-btn ui-corner-all" onclick="
 			window.document.getElementById('startTransfer').style.display = 'none';
 		">OK</a>
