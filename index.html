@@ -18,10 +18,10 @@
 <script src="phonegap.js"></script> 
 <script language="javascript">
  //goal chart
- var g1 = 25000;
- var g2 = 13000;
- var g3 = 5000;
- var g4 = 2000;
+ var goal1 = 25000;
+ var goal2 = 13000;
+ var goal3 = 5000;
+ var goal4 = 2000;
  //QR counter
  var qrCount = 1;
  
@@ -271,10 +271,10 @@ function yearsToMonths(year,frequency) {
 			data: {
 				datasets: [{
 					data: [
-						g1,
-						g2,
-						g3,
-						g4,
+						goal1,
+						goal2,
+						goal3,
+						goal4,
 					],
 					backgroundColor: [
 						window.chartColors.green,
@@ -1109,7 +1109,7 @@ function yearsToMonths(year,frequency) {
 		<td width="15%" style="text-align:center"><img src="img/everydayBanking.png" width="40" height="40" /></td>
 		<td width="20%">Everyday Banking</td>
 		<td width="55%" class="font-small">
-			<ul><li>Saving & Rates</li><li>Personal Loan</li><li>Cards & Security</li><li>Rewards & Treats</li></ul></td>
+			<ul><li>Saving & Rates</li><li>Personal Loan</li><li>Cards & Security</li><li>Asset Financing</li></ul></td>
 	</tr><tr>
 		<td ><input type="checkbox" id="box2" /></td>
 		<td style="text-align:center"><img src="img/investment.png" width="40" height="40" /></td>
@@ -1127,8 +1127,8 @@ function yearsToMonths(year,frequency) {
 	
 	<p class="pgTitle"><span class="pgTitleRed">I AM AVAILABLE</span> TO DISCUSS ON:</p>
 	<table id="apptTbl2" class="travel"><tr>
-			<td width="50%">Date <input id="dtAppt" type="date" value="2017-11-24"></td>
-			<td width="50%">Time <input id="timeAppt" type="time" value="10:00:00"></td>
+			<td width="50%">Date <input id="dtAppt" type="date" value="2018-06-29"></td>
+			<td width="50%">Time <input id="timeAppt" type="time" value="17:00:00"></td>
 	</tr>
 	</table> 
 	<a data-rel="popup" href="#" class="ui-btn ui-corner-all blue" data-position-to="window" onclick="window.document.getElementById('saveAppt').style.display = 'block';">Save</a>
@@ -1179,6 +1179,7 @@ function yearsToMonths(year,frequency) {
 	</div>
 	<!---- Content --->
     <div role="main" class="ui-content">
+	<div id="loadingTrf" style="padding-top:135pt;padding-left:65pt;width:80%;height:60%;background-color:white;display:none;float:center;z-index:2;position:absolute;" ><img src="img/loading.gif" width="200" height="200" /> </div>
 	<p class="pgTitle"><span class="pgTitleRed">INSTANT</span> TRANSFER:</p>
 	<table id="transferTbl" class="travel" style="width:100%"  cellspacing=0 cellpadding=0>
 		<tr>
@@ -1230,6 +1231,7 @@ function yearsToMonths(year,frequency) {
 				window.document.getElementById('saveTransfer').innerText = 'Invalid mobile number to initiate transfer. Please enter valid Recipient Mobile with country code';
 			}else{
 				//add codes deduct account balance
+				showLoading('loadingTrf', 3000);
 				window.document.getElementById('saveTransfer').innerText = 'Your transfer has been successful';
 			}			
 		};
@@ -1356,42 +1358,42 @@ function yearsToMonths(year,frequency) {
 		<td width="10%"><a href="#message" data-icon="delete" data-iconpos="notext" data-role="button" onClick="
 		window.document.getElementById('msg1').style.display = 'none';
 		">Delete</a></td>
-		<td width="20%">04 May 18</td>
-		<td width="70%"><a href="#" >Scheduled Maintenance from 11pm, 10 May 18 to 4am, 11 May 18</a></td>
+		<td width="20%">04 Jun 18</td>
+		<td width="70%"><a href="#" >Scheduled Maintenance from 11pm, 10 Jun 18 to 4am, 11 Jun 18</a></td>
 	</tr></table></div>
 	<div id="msg2" style="display:block"><table class="msg"><tr>
 		<td width="10%"><a href="#message" data-icon="delete" data-iconpos="notext" data-role="button" onClick="
 		window.document.getElementById('msg2').style.display = 'none';
 		">Delete</a></td>
-		<td width="20%">12 May 18</td>
+		<td width="20%">12 Jun 18</td>
 		<td width="70%"><a href="#" >Launch of new OCBC Swing App!</a></td>
 	</tr></table></div>
 	<div id="msg3" style="display:block"><table class="msg"><tr>
 		<td width="10%"><a href="#message" data-icon="delete" data-iconpos="notext" data-role="button" onClick="
 		window.document.getElementById('msg3').style.display = 'none';
 		">Delete</a></td>
-		<td width="20%">14 May 18</td>
+		<td width="20%">14 Jun 18</td>
 		<td width="70%"><a href="#" >Your Reward for Installing OCBC Swing App</a></td>
 	</tr></table></div>
 	<div id="msg4" style="display:block"><table class="msg"><tr>
 		<td width="10%"><a href="#message" data-icon="delete" data-iconpos="notext" data-role="button" onClick="
 		window.document.getElementById('msg4').style.display = 'none';
 		">Delete</a></td>
-		<td width="20%">15 May 18</td>
+		<td width="20%">15 Jun 18</td>
 		<td width="70%"><a href="#" >Re: Your Enquiry on OCBC Swing App</a></td>
 	</tr></table></div>
 	<div id="msg5" style="display:block"><table class="msg"><tr>
 		<td width="10%"><a href="#message" data-icon="delete" data-iconpos="notext" data-role="button" onClick="
 		window.document.getElementById('msg5').style.display = 'none';
 		">Delete</a></td>
-		<td width="20%">20 May 18</td>
+		<td width="20%">20 Jun 18</td>
 		<td width="70%"><a href="#" >Revised Deposit Rates Effective 1st Jun 18</a></td>
 	</tr></table></div>
 	<div id="msg6" style="display:block"><table class="msg"><tr>
 		<td width="10%"><a href="#message" data-icon="delete" data-iconpos="notext" data-role="button" onClick="
 		window.document.getElementById('msg6').style.display = 'none';
 		">Delete</a></td>
-		<td width="20%">03 Jun 18</td>
+		<td width="20%">25 Jun 18</td>
 		<td width="70%"><a href="#" >Introducing a new Credit Card for Frequent Travellers!</a></td>
 	</tr></table></div>
 	<!-- spare for queue ticket counter -->
@@ -1399,14 +1401,14 @@ function yearsToMonths(year,frequency) {
 		<td width="10%"><a href="#message" data-icon="delete" data-iconpos="notext" data-role="button" onClick="
 		window.document.getElementById('msg7').style.display = 'none';
 		">Delete</a></td>
-		<td width="20%">24 Jun 18</td>
+		<td width="20%">29 Jun 18</td>
 		<td width="70%"><a href="#" >Your queue ticket number for <span id="msgBrTitle7"></span></a></td>
 	</tr></table></div>
 	<div id="msg8" style="display:none"><table class="msg"><tr>
 		<td width="10%"><a href="#message" data-icon="delete" data-iconpos="notext" data-role="button" onClick="
 		window.document.getElementById('msg8').style.display = 'none';
 		">Delete</a></td>
-		<td width="20%">24 Jun 18</td>
+		<td width="20%">29 Jun 18</td>
 		<td width="70%"><a href="#" >Your queue ticket number for <span id="msgBrTitle8"></span></a></td>
 	</tr></table></div>
 	</div>
